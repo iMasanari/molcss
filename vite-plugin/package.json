@@ -1,0 +1,5 @@
+{
+  "main": "../dist/vite-plugin.js",
+  "module": "../dist/vite-plugin.mjs",
+  "types": "../dist/vite-plugin.d.ts"
+}

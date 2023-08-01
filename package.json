@@ -1,0 +1,50 @@
+{
+  "name": "molcss",
+  "version": "0.0.1",
+  "description": "Atomic CSS-in-JS Library.",
+  "main": "./dist/molcss.js",
+  "module": "./dist/molcss.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/molcss.mjs",
+      "require": "./dist/molcss.js"
+    },
+    "./babel-plugin": {
+      "import": "./dist/babel-plugin.mjs",
+      "require": "./dist/babel-plugin.js"
+    },
+    "./vite-plugin": {
+      "import": "./dist/vite-plugin.mjs",
+      "require": "./dist/vite-plugin.js"
+    }
+  },
+  "files": [
+    "dist",
+    "babel-plugin",
+    "vite-plugin"
+  ],
+  "scripts": {
+    "generate": "node -r esbuild-register scripts/defineCssProperties.ts",
+    "build": "rollup -c rollup.config.mjs",
+    "test": "vitest run"
+  },
+  "author": "iMasanari",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.22.9",
+    "@rollup/pluginutils": "^5.0.2",
+    "fast-glob": "^3.3.1",
+    "stylis": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.1",
+    "@types/stylis": "^4.2.0",
+    "esbuild-register": "^3.4.2",
+    "jsdom": "^22.1.0",
+    "rollup": "^3.27.0",
+    "rollup-plugin-dts": "^5.3.1",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.33.0"
+  }
+}
