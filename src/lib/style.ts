@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { glob } from 'fast-glob'
+import glob from 'fast-glob'
 import { defineProperties, shorthands } from '../generated/defineCssProperties'
 import { convertToAlphabet } from '../utils/convertor'
 import { StyleData } from './css-parser'
