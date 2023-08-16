@@ -1,11 +1,7 @@
-import { transformAsync } from '@babel/core'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
-import molcssBabelPlugin from './babel-plugin'
-import { StyleData } from './lib/css-parser'
-import { correctStyleData, createClassName, createStyle, createStyleContext } from './lib/style'
+import Transformer from './Transformer'
 
-const PACKAGE_NAME = 'molcss'
 const STYLE_PATH = 'virtual:molcss/style.css'
 
 interface Options {
@@ -17,8 +13,7 @@ interface Options {
 export default function molcss({ include, exclude, content }: Options): Plugin {
   const filter = createFilter(include || /\.(jsx?|tsx?|cjs|mjs)$/, exclude)
 
-  const styleContext = createStyleContext()
-  const styleMap = new Map<string, StyleData>()
+  const transformer = new Transformer()
 
   let config: ResolvedConfig
   let server: ViteDevServer | undefined
@@ -39,43 +34,18 @@ export default function molcss({ include, exclude, content }: Options): Plugin {
         return null
       }
 
-      const styles = await correctStyleData(content)
+      await transformer.analyze(content)
 
-      styles.forEach((style) => {
-        styleMap.set(createClassName(style, styleContext), style)
-      })
-
-      return createStyle(styleMap)
+      return transformer.getCss()
     },
     async transform(input, id) {
       if (!filter(id)) {
         return
       }
 
-      const result = await transformAsync(input, {
-        plugins: [[molcssBabelPlugin, { context: styleContext }]],
-        sourceMaps: true,
-      })
+      const result = await transformer.transform(input)
 
-      let { code, map, metadata } = result!
-
-      if (!code) {
-        return
-      }
-
-      const styles = (metadata as any)[PACKAGE_NAME] as Map<string, StyleData> | undefined
-
-      if (!styles) {
-        return
-      }
-
-      const size = styleMap.size
-
-      styles.forEach((style, key) => {
-        styleMap.set(key, style)
-      })
-
-      if (server && styleMap.size !== size) {
+      if (server && transformer.shouldUpdate()) {
         const module = await server.moduleGraph.getModuleByUrl(`\0${STYLE_PATH}`)
 
         if (module) {
@@ -83,7 +53,7 @@ export default function molcss({ include, exclude, content }: Options): Plugin {
         }
       }
 
-      return { code, map }
+      return result
     },
   }
 }
