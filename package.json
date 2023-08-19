@@ -16,12 +16,24 @@
     "./vite-plugin": {
       "import": "./dist/vite-plugin.mjs",
       "require": "./dist/vite-plugin.js"
-    }
+    },
+    "./webpack-loader": {
+      "import": "./dist/webpack-loader.mjs",
+      "require": "./dist/webpack-loader.js"
+    },
+    "./webpack-plugin": {
+      "import": "./dist/webpack-plugin.mjs",
+      "require": "./dist/webpack-plugin.js"
+    },
+    "./style.css": "./style.css/index.mjs"
   },
   "files": [
     "dist",
     "babel-plugin",
-    "vite-plugin"
+    "vite-plugin",
+    "webpack-loader",
+    "webpack-plugin",
+    "style.css"
   ],
   "scripts": {
     "generate": "node -r esbuild-register scripts/defineCssProperties.ts",
@@ -34,7 +46,8 @@
     "@babel/core": "^7.22.9",
     "@rollup/pluginutils": "^5.0.2",
     "fast-glob": "^3.3.1",
-    "stylis": "^4.3.0"
+    "stylis": "^4.3.0",
+    "webpack-virtual-modules": "^0.5.0"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
@@ -45,6 +58,7 @@
     "rollup-plugin-dts": "^5.3.1",
     "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^5.1.6",
-    "vitest": "^0.33.0"
+    "vitest": "^0.33.0",
+    "webpack": "^5.88.2"
   }
 }

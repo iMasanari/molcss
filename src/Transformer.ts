@@ -9,6 +9,7 @@ export default class Transformer {
   private _context = createStyleContext()
   private _styleMap = new Map<string, StyleData>()
   private _unknownClassNames: string[] = []
+  private _updateListeners = new Set<() => void>()
 
   async analyze(content: string | string[]) {
     const styles = await correctStyleData(content)
@@ -24,9 +25,10 @@ export default class Transformer {
     return createStyle(this._styleMap)
   }
 
-  async transform(input: string) {
+  async transform(input: string, inputSourceMap?: any) {
     const result = await transformAsync(input, {
       plugins: [[molcssBabelPlugin, { context: this._context }]],
+      inputSourceMap: inputSourceMap,
       sourceMaps: true,
     })
 
@@ -42,16 +44,25 @@ export default class Transformer {
       return
     }
 
+    let shouldUpdate = false
+
     for (const [className] of styles) {
       if (!this._styleMap.has(className)) {
+        shouldUpdate = true
         this._unknownClassNames.push(className)
       }
+    }
+
+    if (shouldUpdate) {
+      this._updateListeners.forEach(fn => fn())
     }
 
     return { code, map }
   }
 
-  shouldUpdate() {
-    return !!this._unknownClassNames.length
+  subscribeShouldUpdate(fn: () => void) {
+    this._updateListeners.add(fn)
+
+    return () => this._updateListeners.delete(fn)
   }
 }

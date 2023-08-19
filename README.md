@@ -5,7 +5,7 @@ Atomic CSS-in-JS Library.
 ## Usage
 
 ```jsx
-import 'virtual:molcss/style.css'
+import 'molcss/style.css'
 import { css } from 'molcss'
 
 const className = css`
@@ -29,10 +29,45 @@ export default () => <div className={className} />
 import molcss from 'molcss/vite-plugin'
 
 export default defineConfig({
+  // ...
   plugins: [
     molcss({
       content: 'src/**/*.{js,jsx,ts,tsx}',
     })
   ],
+  // ...
 })
+```
+
+### Webpack
+
+```js
+const MolcssPlugin = require('molcss/webpack-plugin').default
+
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: [
+          { loader: MolcssPlugin.loader },
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new MolcssPlugin({
+      content: 'src/**.{js,jsx}',
+    }),
+  ],
+  // ...
+}
 ```

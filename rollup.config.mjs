@@ -11,6 +11,8 @@ const config = defineConfig({
   ],
   external: [
     'node:fs/promises',
+    'node:module',
+    'node:path',
     ...Object.keys(packages.dependencies),
   ],
 })
@@ -28,6 +30,8 @@ export default defineConfig([
     input: {
       'babel-plugin': './src/babel-plugin.ts',
       'vite-plugin': './src/vite-plugin.ts',
+      'webpack-loader': './src/webpack-loader.ts',
+      'webpack-plugin': './src/webpack-plugin.ts',
     },
     output: [
       { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk-[name]-[hash].mjs' },
@@ -38,6 +42,8 @@ export default defineConfig([
       'molcss': './src/client.ts',
       'babel-plugin': './src/babel-plugin.ts',
       'vite-plugin': './src/vite-plugin.ts',
+      'webpack-loader': './src/webpack-loader.ts',
+      'webpack-plugin': './src/webpack-plugin.ts',
     },
     plugins: [dts()],
     output: [

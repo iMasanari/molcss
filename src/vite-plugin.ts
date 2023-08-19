@@ -18,6 +18,16 @@ export default function molcss({ include, exclude, content }: Options): Plugin {
   let config: ResolvedConfig
   let server: ViteDevServer | undefined
 
+  transformer.subscribeShouldUpdate(async () => {
+    if (!server) return
+
+    const module = await server.moduleGraph.getModuleByUrl(`\0${STYLE_PATH}`)
+
+    if (module) {
+      server.reloadModule(module)
+    }
+  })
+
   return {
     name: 'molcss',
     configResolved(_config) {
@@ -43,17 +53,7 @@ export default function molcss({ include, exclude, content }: Options): Plugin {
         return
       }
 
-      const result = await transformer.transform(input)
-
-      if (server && transformer.shouldUpdate()) {
-        const module = await server.moduleGraph.getModuleByUrl(`\0${STYLE_PATH}`)
-
-        if (module) {
-          server.reloadModule(module)
-        }
-      }
-
-      return result
+      return await transformer.transform(input)
     },
   }
 }
