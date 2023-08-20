@@ -20,6 +20,7 @@ const virtualModules = new VirtualModulesPlugin({
 
 export interface MolcssWebpackOptions {
   content: string | string[]
+  nextjsAppDir?: boolean
 }
 
 export const loader = 'molcss/webpack-loader'
@@ -36,6 +37,10 @@ export default class MolcssPlugin {
   apply(compiler: Compiler) {
     virtualModules.apply(compiler)
 
+    if (this.options.nextjsAppDir) {
+      this._setupVirtualModuleLoader(compiler)
+    }
+
     compiler.hooks.beforeRun.tapPromise(PACKAGE_NAME, async () => {
       await transformer.analyze(this.options.content)
 
@@ -46,6 +51,26 @@ export default class MolcssPlugin {
       await transformer.analyze(this.options.content)
 
       virtualModules.writeModule(stylePath, transformer.getCss())
+    })
+  }
+
+  private _setupVirtualModuleLoader(compiler: Compiler) {
+    compiler.options.module.rules.push({
+      test: /\/molcss\/style\.css\/index\.mjs?$/,
+      use: [
+        {
+          loader: 'molcss/webpack-virtual-module-loader',
+          options: { content: `import './_virtual.css';` },
+        },
+      ],
+    }, {
+      test: /\/molcss\/style\.css\/_virtual\.css?$/,
+      use: [
+        {
+          loader: 'molcss/webpack-virtual-module-loader',
+          options: { content: () => transformer.getCss() },
+        },
+      ],
     })
   }
 }

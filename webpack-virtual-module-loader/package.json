@@ -1,0 +1,5 @@
+{
+  "main": "../dist/webpack-virtual-module-loader.js",
+  "module": "../dist/webpack-virtual-module-loader.mjs",
+  "types": "../dist/webpack-virtual-module-loader.d.ts"
+}

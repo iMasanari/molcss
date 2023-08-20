@@ -39,9 +39,43 @@ export default defineConfig({
 })
 ```
 
+### Next.js (appDir)
+
+```js
+// next.config.js
+const MolcssPlugin = require('molcss/webpack-plugin').default
+
+const plugin = new MolcssPlugin({
+  content: 'app/**.{js,jsx,ts,tsx}',
+  nextjsAppDir: true,
+})
+
+module.exports = {
+  // ...
+  experimental: {
+    appDir: true,
+  },
+  webpack(config) {
+    config.module.rules.unshift({
+      test: /\.(js|jsx|ts|tsx)$/,
+      use: [
+        { loader: MolcssPlugin.loader },
+      ],
+    })
+
+    config.plugins.unshift(plugin)
+
+    return config
+  },
+  // ...
+}
+
+```
+
 ### Webpack
 
 ```js
+// webpack.config.js
 const MolcssPlugin = require('molcss/webpack-plugin').default
 
 module.exports = {
@@ -49,7 +83,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         use: [
           { loader: MolcssPlugin.loader },
         ],
@@ -65,7 +99,7 @@ module.exports = {
   },
   plugins: [
     new MolcssPlugin({
-      content: 'src/**.{js,jsx}',
+      content: 'app/**.{js,jsx,ts,tsx}',
     }),
   ],
   // ...

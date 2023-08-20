@@ -25,6 +25,10 @@
       "import": "./dist/webpack-plugin.mjs",
       "require": "./dist/webpack-plugin.js"
     },
+    "./webpack-virtual-module-loader": {
+      "import": "./dist/webpack-virtual-module-loader.mjs",
+      "require": "./dist/webpack-virtual-module-loader.js"
+    },
     "./style.css": "./style.css/index.mjs"
   },
   "files": [
