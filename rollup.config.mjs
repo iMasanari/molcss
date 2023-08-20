@@ -28,20 +28,18 @@ export default defineConfig([
   }, {
     ...config,
     input: {
-      'babel-plugin': './src/babel-plugin.ts',
       'vite-plugin': './src/vite-plugin.ts',
       'webpack-loader': './src/webpack-loader.ts',
       'webpack-plugin': './src/webpack-plugin.ts',
       'webpack-virtual-module-loader': './src/webpack-virtual-module-loader.ts',
     },
     output: [
-      { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk-[name]-[hash].mjs' },
-      { format: 'cjs', dir: 'dist', entryFileNames: '[name].js', chunkFileNames: 'chunk-[name]-[hash].js', exports: 'named', interop: 'auto' },
+      { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk/[name]-[hash].mjs' },
+      { format: 'cjs', dir: 'dist', entryFileNames: '[name].js', chunkFileNames: 'chunk/[name]-[hash].js', exports: 'named', interop: 'auto' },
     ],
   }, {
     input: {
       'molcss': './src/client.ts',
-      'babel-plugin': './src/babel-plugin.ts',
       'vite-plugin': './src/vite-plugin.ts',
       'webpack-loader': './src/webpack-loader.ts',
       'webpack-plugin': './src/webpack-plugin.ts',

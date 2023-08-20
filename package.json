@@ -9,10 +9,6 @@
       "import": "./dist/molcss.mjs",
       "require": "./dist/molcss.js"
     },
-    "./babel-plugin": {
-      "import": "./dist/babel-plugin.mjs",
-      "require": "./dist/babel-plugin.js"
-    },
     "./vite-plugin": {
       "import": "./dist/vite-plugin.mjs",
       "require": "./dist/vite-plugin.js"

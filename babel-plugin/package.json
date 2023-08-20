@@ -1,5 +1,0 @@
-{
-  "main": "../dist/babel-plugin.js",
-  "module": "../dist/babel-plugin.mjs",
-  "types": "../dist/babel-plugin.d.ts"
-}
