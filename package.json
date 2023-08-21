@@ -1,6 +1,6 @@
 {
   "name": "molcss",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Atomic CSS-in-JS Library.",
   "main": "./dist/molcss.js",
   "module": "./dist/molcss.mjs",
