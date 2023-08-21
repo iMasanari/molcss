@@ -25,6 +25,11 @@ export default () => <div className={className} />
 ### Vite
 
 ```js
+// code
+import 'virtual:molcss/style.css'
+```
+
+```js
 // vite.config.js
 import molcss from 'molcss/vite-plugin'
 
@@ -39,7 +44,12 @@ export default defineConfig({
 })
 ```
 
-### Next.js (appDir)
+### Next.js appDir (bata)
+
+```js
+// code
+import 'molcss/style.css'
+```
 
 ```js
 // next.config.js
@@ -72,7 +82,12 @@ module.exports = {
 
 ```
 
-### Webpack
+### Webpack (bata)
+
+```js
+// code
+import 'molcss/style.css'
+```
 
 ```js
 // webpack.config.js

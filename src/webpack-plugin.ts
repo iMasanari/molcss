@@ -1,5 +1,4 @@
 import { createRequire } from 'node:module'
-import { dirname, join } from 'node:path'
 import type { Compiler } from 'webpack'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { transformer } from './webpack-loader'
@@ -11,12 +10,10 @@ const resolvePath = (path: string) =>
 
 const PACKAGE_NAME = 'molcss'
 
-const injectScriptPath = resolvePath('molcss/style.css')
-const stylePath = join(dirname(injectScriptPath), '_virtual.css')
+const packagePath = resolvePath('molcss/package.json')
+const stylePath = resolvePath('molcss/style.css')
 
-const virtualModules = new VirtualModulesPlugin({
-  [injectScriptPath]: `import './_virtual.css';`,
-})
+const virtualModules = new VirtualModulesPlugin()
 
 export interface MolcssWebpackOptions {
   content: string | string[]
@@ -45,26 +42,24 @@ export default class MolcssPlugin {
       await transformer.analyze(this.options.content)
 
       virtualModules.writeModule(stylePath, transformer.getCss())
+
+      // XXX: 無理やり更新させるためのハック
+      virtualModules.writeModule(packagePath, JSON.stringify({}))
     })
 
     transformer.subscribeShouldUpdate(async () => {
       await transformer.analyze(this.options.content)
 
       virtualModules.writeModule(stylePath, transformer.getCss())
+
+      // XXX: 無理やり更新させるためのハック
+      virtualModules.writeModule(packagePath, JSON.stringify({}))
     })
   }
 
   private _setupVirtualModuleLoader(compiler: Compiler) {
     compiler.options.module.rules.push({
-      test: /\/molcss\/style\.css\/index\.mjs?$/,
-      use: [
-        {
-          loader: 'molcss/webpack-virtual-module-loader',
-          options: { content: `import './_virtual.css';` },
-        },
-      ],
-    }, {
-      test: /\/molcss\/style\.css\/_virtual\.css?$/,
+      test: /\/molcss\/style\.css$/,
       use: [
         {
           loader: 'molcss/webpack-virtual-module-loader',

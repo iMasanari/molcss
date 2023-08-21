@@ -25,11 +25,11 @@
       "import": "./dist/webpack-virtual-module-loader.mjs",
       "require": "./dist/webpack-virtual-module-loader.js"
     },
-    "./style.css": "./style.css/index.mjs"
+    "./style.css": "./style.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
-    "babel-plugin",
     "vite-plugin",
     "webpack-loader",
     "webpack-plugin",
