@@ -20,6 +20,51 @@ const className = css`
 export default () => <div className={className} />
 ```
 
+## Features
+
+The described style definitions are atomically decomposed and reused at build time.
+
+### Before build
+
+```js
+import { css, mergeStyle } from 'molcss'
+
+const a = css`
+  color: black;
+  padding: 1px;
+  margin-top: 4px;
+`
+
+const b = css`
+  color: black;
+  padding: 2px;
+  margin: 3px;
+`
+
+const c1 = mergeStyle(a, b)
+const c2 = mergeStyle(b, a)
+```
+
+### After build
+
+```js
+/*
+generated css
+.c0 { color: black; }
+.a0 { padding: 1px; }
+.a1 { padding: 2px; }
+.d0 { margin: 3px; }
+.l0 { margin-top: 4px; }
+*/
+
+import { mergeStyle } from 'molcss'
+
+const a = 'c0 a0 l0'
+const b = 'c0 a1 d0'
+const c1 = mergeStyle(a, b) // 'c0 a1 d0'
+const c2 = mergeStyle(b, a) // 'c0 a0 d0 l0'
+```
+
 ## Setup
 
 ### Vite
