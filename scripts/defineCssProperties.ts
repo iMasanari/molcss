@@ -1,6 +1,61 @@
 import { writeFile } from 'node:fs/promises'
 import { convertToAlphabet } from 'src/utils/convertor'
 
+const commonlyUsedProperties = [
+  'padding',
+  'width',
+  'color',
+  'margin',
+  'line-height',
+  'font-size',
+  'height',
+  'background-color',
+  'display',
+  'background',
+  'max-width',
+  'margin-top',
+  'border',
+  'margin-left',
+  'z-index',
+  'border-radius',
+  'margin-bottom',
+  'font-weight',
+  'margin-right',
+  'font-family',
+  'transition',
+  'position',
+  'opacity',
+  'border-bottom',
+  'text-align',
+  'overflow',
+  'padding-left',
+  'left',
+  'top',
+  'box-shadow',
+  'min-height',
+  'justify-content',
+  'text-transform',
+  'min-width',
+  'padding-top',
+  'letter-spacing',
+  'padding-right',
+  'outline',
+  'background-image',
+  'flex',
+  'vertical-align',
+  'padding-bottom',
+  'fill',
+  'content',
+  'background-size',
+  'border-color',
+  'font',
+  'cursor',
+  'right',
+  'transform',
+  'align-items',
+  'text-decoration',
+]
+
 const shorthandRecord: Record<string, string[]> = {
   'animation': [
     'animation-name',
@@ -179,6 +234,7 @@ const shorthandRecord: Record<string, string[]> = {
 }
 
 const props = new Set([
+  ...commonlyUsedProperties,
   ...Object.keys(shorthandRecord),
   ...Object.values(shorthandRecord).flat(),
 ])
