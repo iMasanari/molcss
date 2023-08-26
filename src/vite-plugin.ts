@@ -19,7 +19,7 @@ export default function molcss({ include, exclude, content }: Options): Plugin {
   let server: ViteDevServer | undefined
 
   transformer.subscribeShouldUpdate(async () => {
-    if (!server) return
+    if (!server || config.command !== 'serve') return
 
     const module = await server.moduleGraph.getModuleByUrl(`\0${STYLE_PATH}`)
 
