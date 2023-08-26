@@ -6,24 +6,29 @@
   "module": "./dist/molcss.mjs",
   "exports": {
     ".": {
+      "types": "./dist/molcss.d.ts",
       "import": "./dist/molcss.mjs",
       "require": "./dist/molcss.js"
     },
     "./vite-plugin": {
-      "import": "./dist/vite-plugin.mjs",
-      "require": "./dist/vite-plugin.js"
+      "types": "./dist/vite/vite-plugin.d.ts",
+      "import": "./dist/vite/vite-plugin.mjs",
+      "require": "./dist/vite/vite-plugin.js"
     },
     "./webpack-loader": {
-      "import": "./dist/webpack-loader.mjs",
-      "require": "./dist/webpack-loader.js"
+      "types": "./dist/webpack/webpack-loader.d.ts",
+      "import": "./dist/webpack/webpack-loader.mjs",
+      "require": "./dist/webpack/webpack-loader.js"
     },
     "./webpack-plugin": {
-      "import": "./dist/webpack-plugin.mjs",
-      "require": "./dist/webpack-plugin.js"
+      "types": "./dist/webpack/webpack-plugin.d.ts",
+      "import": "./dist/webpack/webpack-plugin.mjs",
+      "require": "./dist/webpack/webpack-plugin.js"
     },
     "./webpack-virtual-module-loader": {
-      "import": "./dist/webpack-virtual-module-loader.mjs",
-      "require": "./dist/webpack-virtual-module-loader.js"
+      "types": "./dist/webpack/webpack-virtual-module-loader.d.ts",
+      "import": "./dist/webpack/webpack-virtual-module-loader.mjs",
+      "require": "./dist/webpack/webpack-virtual-module-loader.js"
     },
     "./style.css": "./style.css",
     "./package.json": "./package.json"
@@ -33,6 +38,7 @@
     "vite-plugin",
     "webpack-loader",
     "webpack-plugin",
+    "webpack-virtual-module-loader",
     "style.css"
   ],
   "scripts": {

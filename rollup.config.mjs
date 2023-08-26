@@ -28,10 +28,10 @@ export default defineConfig([
   }, {
     ...config,
     input: {
-      'vite-plugin': './src/vite-plugin.ts',
-      'webpack-loader': './src/webpack-loader.ts',
-      'webpack-plugin': './src/webpack-plugin.ts',
-      'webpack-virtual-module-loader': './src/webpack-virtual-module-loader.ts',
+      'vite/vite-plugin': './src/vite-plugin.ts',
+      'webpack/webpack-loader': './src/webpack-loader.ts',
+      'webpack/webpack-plugin': './src/webpack-plugin.ts',
+      'webpack/webpack-virtual-module-loader': './src/webpack-virtual-module-loader.ts',
     },
     output: [
       { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk/[name]-[hash].mjs' },
@@ -40,10 +40,10 @@ export default defineConfig([
   }, {
     input: {
       'molcss': './src/client.ts',
-      'vite-plugin': './src/vite-plugin.ts',
-      'webpack-loader': './src/webpack-loader.ts',
-      'webpack-plugin': './src/webpack-plugin.ts',
-      'webpack-virtual-module-loader': './src/webpack-virtual-module-loader.ts',
+      'vite/vite-plugin': './src/vite-plugin.ts',
+      'webpack/webpack-loader': './src/webpack-loader.ts',
+      'webpack/webpack-plugin': './src/webpack-plugin.ts',
+      'webpack/webpack-virtual-module-loader': './src/webpack-virtual-module-loader.ts',
     },
     plugins: [dts()],
     output: [

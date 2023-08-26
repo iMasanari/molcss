@@ -1,5 +1,5 @@
 {
-  "main": "../dist/vite-plugin.js",
-  "module": "../dist/vite-plugin.mjs",
-  "types": "../dist/vite-plugin.d.ts"
+  "main": "../dist/vite/vite-plugin.js",
+  "module": "../dist/vite/vite-plugin.mjs",
+  "types": "../dist/vite/vite-plugin.d.ts"
 }
