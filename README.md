@@ -101,7 +101,10 @@ import 'molcss/style.css'
 const MolcssPlugin = require('molcss/webpack-plugin').default
 
 const plugin = new MolcssPlugin({
-  content: 'app/**.{js,jsx,ts,tsx}',
+  content: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    'app/**/*.{js,jsx,ts,tsx}',
+  ],
   nextjsAppDir: true,
 })
 
