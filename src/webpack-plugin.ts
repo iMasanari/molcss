@@ -1,23 +1,13 @@
-import { createRequire } from 'node:module'
+import { resolve } from 'node:path'
 import type { Compiler } from 'webpack'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { transformer } from './webpack-loader'
 
-const resolvePath = (path: string) =>
-  typeof require !== 'undefined'
-    ? require.resolve(path)
-    : createRequire(import.meta.url).resolve(path)
-
 const PACKAGE_NAME = 'molcss'
-
-const packagePath = resolvePath('molcss/package.json')
-const stylePath = resolvePath('molcss/style.css')
-
-const virtualModules = new VirtualModulesPlugin()
+const IMPORT_STYLE_PATH = 'molcss/style.css'
 
 export interface MolcssWebpackOptions {
   content: string | string[]
-  nextjsAppDir?: boolean
 }
 
 export const loader = 'molcss/webpack-loader'
@@ -32,40 +22,44 @@ export default class MolcssPlugin {
   }
 
   apply(compiler: Compiler) {
+    const virtualStylePath = resolve(compiler.context, 'virtual:molcss/style.css')
+
+    const virtualModules = new VirtualModulesPlugin({
+      [virtualStylePath]: '',
+    })
+
     virtualModules.apply(compiler)
 
-    if (this.options.nextjsAppDir) {
-      this._setupVirtualModuleLoader(compiler)
-    }
-
-    compiler.hooks.beforeRun.tapPromise(PACKAGE_NAME, async () => {
-      await transformer.analyze(this.options.content)
-
-      virtualModules.writeModule(stylePath, transformer.getCss())
-
-      // XXX: 無理やり更新させるためのハック
-      virtualModules.writeModule(packagePath, JSON.stringify({}))
-    })
-
-    transformer.subscribeShouldUpdate(async () => {
-      await transformer.analyze(this.options.content)
-
-      virtualModules.writeModule(stylePath, transformer.getCss())
-
-      // XXX: 無理やり更新させるためのハック
-      virtualModules.writeModule(packagePath, JSON.stringify({}))
-    })
-  }
-
-  private _setupVirtualModuleLoader(compiler: Compiler) {
     compiler.options.module.rules.push({
-      test: /\/molcss\/style\.css$/,
+      include: (resource) => resource.endsWith('virtual:molcss/style.css'),
       use: [
         {
           loader: 'molcss/webpack-virtual-module-loader',
           options: { content: () => transformer.getCss() },
         },
       ],
+    })
+
+    if (!compiler.options.resolve) {
+      compiler.options.resolve = {}
+    }
+
+    // setup alias
+    compiler.options.resolve.alias = {
+      ...compiler.options.resolve.alias,
+      [IMPORT_STYLE_PATH]: virtualStylePath,
+    }
+
+    compiler.hooks.beforeRun.tapPromise(PACKAGE_NAME, async () => {
+      await transformer.analyze(this.options.content)
+
+      virtualModules.writeModule(virtualStylePath, transformer.getCss())
+    })
+
+    transformer.subscribeShouldUpdate(async () => {
+      await transformer.analyze(this.options.content)
+
+      virtualModules.writeModule(virtualStylePath, transformer.getCss())
     })
   }
 }

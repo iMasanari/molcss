@@ -5,7 +5,8 @@ Atomic CSS-in-JS Library.
 ## Usage
 
 ```jsx
-import 'molcss/style.css'
+import 'virtual:molcss/style.css' // in Vite
+// import 'molcss/style.css'      // in webpack
 import { css } from 'molcss'
 
 const className = css`
@@ -89,7 +90,7 @@ export default defineConfig({
 })
 ```
 
-### Next.js appDir (bata)
+### Next.js appDir (experimental)
 
 ```js
 // code
@@ -105,7 +106,6 @@ const plugin = new MolcssPlugin({
     'src/**/*.{js,jsx,ts,tsx}',
     'app/**/*.{js,jsx,ts,tsx}',
   ],
-  nextjsAppDir: true,
 })
 
 module.exports = {
@@ -117,7 +117,7 @@ module.exports = {
     config.module.rules.unshift({
       test: /\.(js|jsx|ts|tsx)$/,
       use: [
-        { loader: MolcssPlugin.loader },
+        MolcssPlugin.loader,
       ],
     })
 
@@ -130,7 +130,7 @@ module.exports = {
 
 ```
 
-### Webpack (bata)
+### webpack (experimental)
 
 ```js
 // code
@@ -148,21 +148,21 @@ module.exports = {
       {
         test: /\.(js|jsx|ts|tsx)$/,
         use: [
-          { loader: MolcssPlugin.loader },
+          MolcssPlugin.loader,
         ],
       },
       {
         test: /\.css$/,
         use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' },
+          'style-loader',
+          'css-loader',
         ],
       },
     ],
   },
   plugins: [
     new MolcssPlugin({
-      content: 'app/**.{js,jsx,ts,tsx}',
+      content: 'src/**.{js,jsx,ts,tsx}',
     }),
   ],
   // ...

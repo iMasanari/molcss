@@ -11,7 +11,6 @@ const config = defineConfig({
   ],
   external: [
     'node:fs/promises',
-    'node:module',
     'node:path',
     ...Object.keys(packages.dependencies),
   ],
