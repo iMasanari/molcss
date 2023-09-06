@@ -1,3 +1,4 @@
+import { PluginItem } from '@babel/core'
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
 import Transformer from './Transformer'
@@ -8,9 +9,11 @@ interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   content: string | string[]
+  babelPresets?: PluginItem[]
+  babelPlugins?: PluginItem[]
 }
 
-export default function molcss({ include, exclude, content }: Options): Plugin {
+export default function molcss({ include, exclude, content, babelPresets, babelPlugins }: Options): Plugin {
   const filter = createFilter(include || /\.(jsx?|tsx?|cjs|mjs)$/, exclude)
 
   const transformer = new Transformer()
@@ -53,7 +56,7 @@ export default function molcss({ include, exclude, content }: Options): Plugin {
         return
       }
 
-      return await transformer.transform(input)
+      return await transformer.transform(input, { babelPresets, babelPlugins })
     },
   }
 }

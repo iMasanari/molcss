@@ -1,9 +1,14 @@
-import { transformAsync } from '@babel/core'
+import { PluginItem, transformAsync } from '@babel/core'
 import molcssBabelPlugin from './babel-plugin'
 import { StyleData } from './lib/css-parser'
 import { correctStyleData, createClassName, createStyle, createStyleContext } from './lib/style'
 
 const PACKAGE_NAME = 'molcss'
+
+export interface TransformOptions {
+  babelPresets?: PluginItem[]
+  babelPlugins?: PluginItem[]
+}
 
 export default class Transformer {
   private _context = createStyleContext()
@@ -25,10 +30,13 @@ export default class Transformer {
     return createStyle(this._styleMap)
   }
 
-  async transform(input: string, inputSourceMap?: any) {
+  async transform(input: string, { babelPlugins, babelPresets }: TransformOptions) {
     const result = await transformAsync(input, {
-      plugins: [[molcssBabelPlugin, { context: this._context }]],
-      inputSourceMap: inputSourceMap,
+      plugins: [
+        ...(babelPlugins || []),
+        [molcssBabelPlugin, { context: this._context }],
+      ],
+      presets: babelPresets,
       sourceMaps: true,
     })
 

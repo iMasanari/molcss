@@ -1,13 +1,14 @@
 import type { LoaderContext } from 'webpack'
-import Transformer from './Transformer'
+import Transformer, { TransformOptions } from './Transformer'
 
 export const transformer = new Transformer()
 
-export default async function molcssLoader(this: LoaderContext<unknown>, input: string) {
+export default async function molcssLoader(this: LoaderContext<TransformOptions>, input: string) {
   const callback = this.async()
+  const options = this.getOptions()
 
   try {
-    const result = await transformer.transform(input)
+    const result = await transformer.transform(input, options)
 
     if (!result || !result.code) {
       return input
