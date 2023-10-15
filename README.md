@@ -114,14 +114,19 @@ module.exports = {
     appDir: true,
   },
   webpack(config) {
-    config.module.rules.unshift({
+    config.module.rules.push({
       test: /\.(js|jsx|ts|tsx)$/,
       use: [
-        MolcssPlugin.loader,
+        {
+          loader: MolcssPlugin.loader,
+          options: {
+            babelPlugins: [['@babel/plugin-syntax-typescript', { isTSX: true }]],
+          },
+        },
       ],
     })
 
-    config.plugins.unshift(plugin)
+    config.plugins.push(plugin)
 
     return config
   },
