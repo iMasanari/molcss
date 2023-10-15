@@ -1,12 +1,13 @@
 import { resolve } from 'node:path'
 import type { Compiler } from 'webpack'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
+import { TransformOptions } from './Transformer'
 import { transformer } from './webpack-loader'
 
 const PACKAGE_NAME = 'molcss'
 const IMPORT_STYLE_PATH = 'molcss/style.css'
 
-export interface MolcssWebpackOptions {
+export interface MolcssWebpackOptions extends TransformOptions {
   content: string | string[]
 }
 
@@ -51,13 +52,13 @@ export default class MolcssPlugin {
     }
 
     compiler.hooks.beforeRun.tapPromise(PACKAGE_NAME, async () => {
-      await transformer.analyze(this.options.content)
+      await transformer.analyze(this.options.content, this.options)
 
       virtualModules.writeModule(virtualStylePath, transformer.getCss())
     })
 
     transformer.subscribeShouldUpdate(async () => {
-      await transformer.analyze(this.options.content)
+      await transformer.analyze(this.options.content, this.options)
 
       virtualModules.writeModule(virtualStylePath, transformer.getCss())
     })

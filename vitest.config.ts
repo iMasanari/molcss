@@ -9,10 +9,7 @@ export default defineConfig({
   },
   plugins: [
     molcss({
-      content: [
-        'tests/**/*.ts',
-        '!tests/extractor.test.ts',
-      ],
+      content: ['tests/**/*.ts'],
     }),
   ],
   test: {

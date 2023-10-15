@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises'
-import { convertToAlphabet } from 'src/utils/convertor'
+import { convertToAlphabet } from '../src/utils/convertor'
 
 const commonlyUsedProperties = [
   'padding',

@@ -1,8 +1,19 @@
 import { shorthands } from './generated/defineCssProperties'
+import { insertStyle, generateRuntimeStyle } from './lib/runtime'
 
 const hasOwn = Object.prototype.hasOwnProperty
 
-export const css: (template: TemplateStringsArray) => string = () => {
+export interface RuntimeStyle {
+  className: string
+  runtime: [string, string][]
+}
+
+interface CssTagFunction {
+  (template: TemplateStringsArray): string
+  (template: TemplateStringsArray, ...substitutions: string[]): RuntimeStyle
+}
+
+export const css: CssTagFunction = () => {
   throw new Error('Using the "css" tag in runtime is not supported. Make sure you have set up the Babel plugin correctly.')
 }
 
@@ -38,3 +49,6 @@ export const mergeStyle = (...classNames: (string | false | null | undefined)[])
 
   return Object.values(styles).join(' ')
 }
+
+export const generateRuntime = (style: RuntimeStyle) =>
+  style.runtime.reduce((acc, v) => acc + ' ' + generateRuntimeStyle(v[0], v[1], insertStyle), style.className)

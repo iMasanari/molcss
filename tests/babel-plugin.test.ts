@@ -2,7 +2,7 @@ import { transformAsync } from '@babel/core'
 import { expect, it } from 'vitest'
 import plugin from '../src/babel-plugin'
 
-it('tw`...`', async () => {
+it('css`...`', async () => {
   const code = `
     import { css } from "molcss";
     
@@ -12,10 +12,31 @@ it('tw`...`', async () => {
   `
 
   const actual = await transformAsync(code, {
-    plugins: [plugin],
+    plugins: [[plugin, {}]],
   })
 
-  const className = [...(actual?.metadata as any).molcss.keys()].join(' ')
+  const classNames = [...(actual?.metadata as any).molcss.keys()]
 
-  expect(actual?.code).toBe(JSON.stringify(className) + ';')
+  expect(classNames.length).toBe(1)
+  expect(classNames).matchSnapshot()
+  expect(actual?.code).matchSnapshot()
+})
+
+it('css`${...}`', async () => {
+  const code = `
+    import { css } from "molcss";
+    
+    const cssColor = 'blue';
+    
+    css\`
+      color: \${cssColor};
+      border: 1px solid \${cssColor};
+    \`;
+  `
+
+  const actual = await transformAsync(code, {
+    plugins: [[plugin, {}]],
+  })
+
+  expect(actual?.code).matchSnapshot()
 })

@@ -47,7 +47,7 @@ export default function molcss({ include, exclude, content, babelPresets, babelP
         return null
       }
 
-      await transformer.analyze(content)
+      await transformer.analyze(content, { babelPresets, babelPlugins })
 
       return transformer.getCss()
     },

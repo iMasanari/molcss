@@ -1,9 +1,6 @@
-import { readFile } from 'node:fs/promises'
-import glob from 'fast-glob'
 import { defineProperties, shorthands } from '../generated/defineCssProperties'
 import { convertToAlphabet } from '../utils/convertor'
 import { StyleData } from './css-parser'
-import { generate } from './genereator'
 
 const hasOwn = Object.prototype.hasOwnProperty
 
@@ -48,16 +45,6 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
     : ''
 
   return stylePropData.name + styleValueName + styleMetaName
-}
-
-export const correctStyleData = async (content: string | string[]) => {
-  const paths = await glob(content)
-
-  const files = await Promise.all(
-    paths.map((path) => readFile(path, 'utf-8'))
-  )
-
-  return files.flatMap(generate)
 }
 
 export const createStyle = (styleMap: Map<string, StyleData>) => {

@@ -11,13 +11,13 @@
       "dom.iterable",
       "es2020"
     ],
+    "jsx": "preserve",
     "skipLibCheck": true,
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "declaration": true,
-    "baseUrl": ".",
     "paths": {
       "molcss": [
         "./src/client.ts"
