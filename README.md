@@ -1,12 +1,12 @@
 # MolCSS
 
-Atomic CSS-in-JS Library.
+A simple, lightweight, and powerful CSS-in-JS library.
 
 ## Usage
 
 ```jsx
-import 'virtual:molcss/style.css' // in Vite
-// import 'molcss/style.css'      // in webpack
+import 'virtual:molcss/style.css' // for Vite
+// import 'molcss/style.css'      // for webpack (experimental)
 import { css } from 'molcss'
 
 const className = css`
@@ -23,9 +23,11 @@ export default () => <div className={className} />
 
 ## Features
 
+### Atomic CSS-in-JS
+
 The described style definitions are atomically decomposed and reused at build time.
 
-### Before build
+#### Before build
 
 ```js
 import { css, mergeStyle } from 'molcss'
@@ -46,24 +48,56 @@ const c1 = mergeStyle(a, b)
 const c2 = mergeStyle(b, a)
 ```
 
-### After build
+#### After build
 
 ```js
-/*
-generated css
-.c0 { color: black; }
-.a0 { padding: 1px; }
-.a1 { padding: 2px; }
-.d0 { margin: 3px; }
-.l0 { margin-top: 4px; }
-*/
-
 import { mergeStyle } from 'molcss'
 
 const a = 'c0 a0 l0'
 const b = 'c0 a1 d0'
 const c1 = mergeStyle(a, b) // 'c0 a1 d0'
 const c2 = mergeStyle(b, a) // 'c0 a0 d0 l0'
+```
+
+```css
+/* generated css */
+.c0 { color: black; }
+.a0 { padding: 1px; }
+.a1 { padding: 2px; }
+.d0 { margin: 3px; }
+.l0 { margin-top: 4px; }
+```
+
+### Runtime Style
+
+Supports runtime styles. However, unlike static styles, the css return value is a dedicated object.
+For vanilla JS, use generateRuntime. For React, you can use CSS props to support SSR.
+
+```jsx
+/** @jsxImportSource molcss/react */
+import { css, generateRuntime } from 'molcss'
+
+const staticStyle = css`
+  color: blue;
+`
+
+const dynamicStyle = (color) => css`
+  color: ${color};
+`
+
+console.log(typeof staticStyle)         // string
+console.log(typeof dynamicStyle('red')) // object
+
+const ForVanillaJS = () => `
+  <div class=${staticStyle}></div>
+  <div class=${generateRuntime(dynamicStyle('red'))}></div>
+`
+
+const ForReact = () =>
+  <>
+    <div className={staticStyle} />
+    <div css={dynamicStyle('red')} />
+  </>
 ```
 
 ## Setup
@@ -116,14 +150,7 @@ module.exports = {
   webpack(config) {
     config.module.rules.push({
       test: /\.(js|jsx|ts|tsx)$/,
-      use: [
-        {
-          loader: MolcssPlugin.loader,
-          options: {
-            babelPlugins: [['@babel/plugin-syntax-typescript', { isTSX: true }]],
-          },
-        },
-      ],
+      use: MolcssPlugin.loader,
     })
 
     config.plugins.push(plugin)
