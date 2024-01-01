@@ -40,16 +40,21 @@ export default function molcss({ include, exclude, content, babelPresets, babelP
       server = _server
     },
     resolveId(importee) {
-      return importee === STYLE_PATH ? `\0${STYLE_PATH}` : null
-    },
-    async load(id) {
-      if (id !== `\0${STYLE_PATH}`) {
-        return null
+      if (importee === STYLE_PATH || importee.startsWith(`${STYLE_PATH}?`)) {
+        return `\0${importee}`
       }
 
-      await transformer.analyze(content, { babelPresets, babelPlugins })
+      // NOTE: vite requests path with `.../�virtual:molcss/style.css`
+      if (importee.endsWith(`/�${STYLE_PATH}`)) {
+        return `\0${STYLE_PATH}`
+      }
+    },
+    async load(id) {
+      if (id === `\0${STYLE_PATH}` || id.startsWith(`\0${STYLE_PATH}?`)) {
+        await transformer.analyze(content, { babelPresets, babelPlugins })
 
-      return transformer.getCss()
+        return transformer.getCss()
+      }
     },
     async transform(input, id) {
       if (!filter(id)) {
