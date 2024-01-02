@@ -1,6 +1,7 @@
 import { type NodePath, type PluginObj, type types as t } from '@babel/core'
 import { mergeStyle } from './client'
 import { StyleData, parse } from './lib/css-parser'
+import { parseTagTemplate } from './lib/parse-tag-template'
 import { StyleContext, createClassName, createStyleContext } from './lib/style'
 
 const PACKAGE_NAME = 'molcss'
@@ -39,7 +40,7 @@ export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): Plugi
   return {
     name: 'molcss/babel-plugin',
     visitor: {
-      ImportSpecifier(path, state) {
+      ImportSpecifier(path) {
         if (path.parent.type !== 'ImportDeclaration' || path.parent.source.value !== PACKAGE_NAME) {
           return
         }
@@ -65,62 +66,33 @@ export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): Plugi
             continue
           }
 
-          let style = ''
-          const quasiMap = new Map<string, t.Expression>()
+          const result = parseTagTemplate(
+            target.node.quasi.quasis.map(v => v.value.cooked || ''),
+            target.node.quasi.expressions as t.Expression[],
+            styleContext,
+          )
 
-          for (const [i, v] of target.node.quasi.quasis.entries()) {
-            style += v.value.cooked
+          const classNames = result.styles.map(v => createClassName(v, styleContext))
 
-            if (!v.tail) {
-              const key = `__MOLCSS_VALUE_${i}__`
-              style += key
-              quasiMap.set(key, target.node.quasi.expressions[i] as t.Expression)
-            }
-          }
-
-          const result = parse(style)
-
-          const runtimeStyleList = []
-
-          for (const styleData of result) {
-            for (const [index, value] of styleData.value.entries()) {
-              const list = value.split(/(__MOLCSS_VALUE_\d+__)/)
-
-              if (list.length > 1) {
-                const token = createClassName({ ...styleData, value: [] }, styleContext)
-                const classProp = createClassName({ prop: `--molcss-${token}`, value: [], selector: '&\f', media: '' }, styleContext).replace(/\d+$/, '')
-
-                const expressions = list.filter(Boolean).map(v => quasiMap.get(v) ?? t.stringLiteral(v))
-
-                const expression = expressions.length === 1
-                  ? expressions[0]!
-                  : expressions.reduce((acc, v) => t.binaryExpression('+', acc, v))
-
-                styleData.value[index] = `var(--molcss-${classProp})`
-
-                runtimeStyleList.push({
-                  prop: classProp,
-                  expression,
-                })
-              }
-            }
-          }
-
-          const classNames = result.map(v => createClassName(v, styleContext))
-
-          for (const [i, style] of result.entries()) {
+          for (const [i, style] of result.styles.entries()) {
             styleMap.set(classNames[i]!, style)
           }
 
           const className = mergeStyle(...classNames)
 
-          if (runtimeStyleList.length) {
+          if (result.runtimeStyles.length) {
             const node = t.objectExpression([
               t.objectProperty(t.identifier('className'), t.stringLiteral(className)),
               t.objectProperty(t.identifier('runtime'),
-                t.arrayExpression(runtimeStyleList.map(v =>
-                  t.arrayExpression([t.stringLiteral(v.prop), v.expression])
-                )),
+                t.arrayExpression(result.runtimeStyles.map(v => {
+                  const expressions = v.expressions.filter(Boolean).map(w => typeof w === 'string' ? t.stringLiteral(w) : w)
+
+                  const expression = expressions.length === 1
+                    ? expressions[0]!
+                    : expressions.reduce((acc, v) => t.binaryExpression('+', acc, v))
+
+                  return t.arrayExpression([t.stringLiteral(v.prop), expression])
+                })),
               ),
             ])
 

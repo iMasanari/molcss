@@ -4,7 +4,7 @@ export interface StyleData {
   media: string
   selector: string
   prop: string
-  value: string[]
+  values: string[]
 }
 
 export const parse = (style: string): StyleData[] => {
@@ -13,10 +13,14 @@ export const parse = (style: string): StyleData[] => {
 
   return [...new Set(analyzed.map(v => v.group))].map(group => {
     const list = analyzed.filter(v => v.group === group)
-    const item = list[0]!
-    const style = { ...item, value: list.map(v => v.value) }
+    const { media, selector, prop } = list[0]!
 
-    return style
+    return {
+      media,
+      selector,
+      prop,
+      values: list.map(v => v.value),
+    }
   })
 }
 

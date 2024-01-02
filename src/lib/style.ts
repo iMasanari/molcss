@@ -36,8 +36,8 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
     meta: new Map<string, string>(),
   }))
 
-  const styleValueName = result.value.length
-    ? getOrCreate(stylePropData.values, result.value.join('\n'), (v) => v.size.toString())
+  const styleValueName = result.values.length
+    ? getOrCreate(stylePropData.values, result.values.join('\n'), (v) => v.size.toString())
     : '00' // ランタイムスタイルのキー取得用
 
   const styleMetaName = result.media || result.selector !== '&\f'
@@ -45,6 +45,13 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
     : ''
 
   return stylePropData.name + styleValueName + styleMetaName
+}
+
+export const createRuntimeKey = (styleData: StyleData, styleContext: StyleContext) => {
+  const token = createClassName({ ...styleData, values: [] }, styleContext)
+  const className = createClassName({ prop: `--molcss-runtime-key-${token}`, values: [], selector: '&\f', media: '' }, styleContext)
+
+  return className.replace(/\d+$/, '')
 }
 
 export const createStyle = (styleMap: Map<string, StyleData>) => {
@@ -86,7 +93,7 @@ const sortFn = ([, a]: [string, StyleData], [, b]: [string, StyleData]) => {
 const getStyle = (result: StyleData, className: string) => {
   const selector = result.selector.replace(/&\f?/g, `.${className}`)
 
-  const styles = result.value.map(v => {
+  const styles = result.values.map(v => {
     const style = `${selector}{${result.prop}:${v}}`
 
     return result.media ? `${result.media}{${style}}` : style

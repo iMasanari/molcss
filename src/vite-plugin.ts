@@ -51,7 +51,7 @@ export default function molcss({ include, exclude, content, babelPresets, babelP
     },
     async load(id) {
       if (id === `\0${STYLE_PATH}` || id.startsWith(`\0${STYLE_PATH}?`)) {
-        await transformer.analyze(content, { babelPresets, babelPlugins })
+        await transformer.analyze(content)
 
         return transformer.getCss()
       }

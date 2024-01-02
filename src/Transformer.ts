@@ -1,10 +1,10 @@
 import { readFile } from 'node:fs/promises'
 import { BabelFileMetadata, PluginItem, transformAsync } from '@babel/core'
-// @ts-ignore
-import typescriptSyntaxBabelPlugin from '@babel/plugin-syntax-typescript'
 import glob from 'fast-glob'
 import molcssBabelPlugin from './babel-plugin'
 import { StyleData } from './lib/css-parser'
+import { extract } from './lib/extractor'
+import { parseTagTemplate } from './lib/parse-tag-template'
 import { StyleContext, createClassName, createStyle, createStyleContext } from './lib/style'
 
 const PACKAGE_NAME = 'molcss'
@@ -18,33 +18,16 @@ interface BabelMetaDataWithMolcss extends BabelFileMetadata {
   [PACKAGE_NAME]: Map<string, StyleData> | undefined
 }
 
-const correctStyleData = async (content: string | string[], context: StyleContext, { babelPlugins, babelPresets }: TransformOptions) => {
+const correctStyleData = async (content: string | string[], context: StyleContext) => {
   const paths = await glob(content)
 
-  const files = await Promise.all(paths.map(async (path) => {
-    const source = await readFile(path, 'utf-8')
+  const files = await Promise.all(
+    paths.map((path) => readFile(path, 'utf-8'))
+  )
 
-    if (!/\bmolcss\b/.test(source)) {
-      return []
-    }
-
-    const result = await transformAsync(source, {
-      plugins: [
-        ...(babelPlugins || []),
-        [typescriptSyntaxBabelPlugin, { isTSX: true }],
-        [molcssBabelPlugin, { context }],
-      ],
-      presets: babelPresets,
-      sourceMaps: true,
-    })
-
-    const { metadata } = result!
-    const styles = (metadata as BabelMetaDataWithMolcss)[PACKAGE_NAME]
-
-    return styles ? Array.from(styles.values()) : []
-  }))
-
-  return files.flat()
+  return files.flatMap(v =>
+    extract(v, 'css').flatMap(v => parseTagTemplate(v.quasis, [], context).styles)
+  )
 }
 
 export default class Transformer {
@@ -53,8 +36,8 @@ export default class Transformer {
   private _unknownClassNames: string[] = []
   private _updateListeners = new Set<() => void>()
 
-  async analyze(content: string | string[], options: TransformOptions) {
-    const styles = await correctStyleData(content, this._context, options)
+  async analyze(content: string | string[]) {
+    const styles = await correctStyleData(content, this._context)
 
     for (const style of styles) {
       this._styleMap.set(createClassName(style, this._context), style)
@@ -71,7 +54,6 @@ export default class Transformer {
     const result = await transformAsync(input, {
       plugins: [
         ...(babelPlugins || []),
-        [typescriptSyntaxBabelPlugin, { isTSX: true }],
         [molcssBabelPlugin, { context: this._context }],
       ],
       presets: babelPresets,

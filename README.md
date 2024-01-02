@@ -148,7 +148,7 @@ module.exports = {
     appDir: true,
   },
   webpack(config) {
-    config.module.rules.push({
+    config.module.rules.unshift({
       test: /\.(js|jsx|ts|tsx)$/,
       use: MolcssPlugin.loader,
     })
@@ -159,8 +159,23 @@ module.exports = {
   },
   // ...
 }
-
 ```
+
+```js
+// package.json
+{
+  // ...
+  "browserslist": [
+    "chrome 64",
+    "edge 79",
+    "firefox 67",
+    "opera 51",
+    "safari 13"
+  ]
+}
+```
+
+Increase the version of Safari from its [default settings](https://nextjs.org/docs/architecture/supported-browsers) to prevent tagged template literals from being converted.
 
 ### webpack (experimental)
 

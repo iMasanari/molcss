@@ -52,13 +52,13 @@ export default class MolcssPlugin {
     }
 
     compiler.hooks.beforeRun.tapPromise(PACKAGE_NAME, async () => {
-      await transformer.analyze(this.options.content, this.options)
+      await transformer.analyze(this.options.content)
 
       virtualModules.writeModule(virtualStylePath, transformer.getCss())
     })
 
     transformer.subscribeShouldUpdate(async () => {
-      await transformer.analyze(this.options.content, this.options)
+      await transformer.analyze(this.options.content)
 
       virtualModules.writeModule(virtualStylePath, transformer.getCss())
     })
