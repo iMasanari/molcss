@@ -18,7 +18,7 @@ export const css: CssTagFunction = () => {
 }
 
 const getPropertyData = (str: string) => {
-  const match = str.match(/^(.+)\d+(.*)$/)
+  const match = str.match(/^([A-Za-z]+)\d+([A-Za-z]*)$/)
 
   if (!match) {
     return null
