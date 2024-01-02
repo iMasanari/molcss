@@ -63,7 +63,7 @@ export const insertStyle = (style: CacheableRuntimeStyleData) => {
 
 export const generateRuntimeStyle = (
   prop: string,
-  value: string,
+  value: string | number | bigint,
   insertStyle: (style: CacheableRuntimeStyleData) => void,
 ) => {
   const cacheKey = `${prop}:${value}`
@@ -73,6 +73,7 @@ export const generateRuntimeStyle = (
     return cacheValue
   }
 
+  value = '' + value
   const className = prop + hash(value, hashSeed)
 
   insertStyle({ cacheKey, className, prop: `--molcss-${prop}`, value })

@@ -5,12 +5,12 @@ const hasOwn = Object.prototype.hasOwnProperty
 
 export interface RuntimeStyle {
   className: string
-  runtime: [string, string][]
+  runtime: [string, string | number | bigint][]
 }
 
 interface CssTagFunction {
   (template: TemplateStringsArray): string
-  (template: TemplateStringsArray, ...substitutions: string[]): RuntimeStyle
+  (template: TemplateStringsArray, ...substitutions: (string | number | bigint)[]): RuntimeStyle
 }
 
 export const css: CssTagFunction = () => {
