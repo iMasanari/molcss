@@ -23,7 +23,7 @@ export const jsx = (type: any, props: any, key: any) => {
     return reactJsx(type, props, key)
   }
 
-  return reactJsx(Molcss, { type, props }, key)
+  return reactJsx(Molcss, { type, props, children: props.children }, key)
 }
 
 export const jsxs = (type: any, props: any, key: any) => {
@@ -39,5 +39,5 @@ export const jsxs = (type: any, props: any, key: any) => {
     return reactJsxs(type, props, key)
   }
 
-  return reactJsxs(Molcss, { type, props }, key)
+  return reactJsxs(Molcss, { type, props, children: props.children }, key)
 }
