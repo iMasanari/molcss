@@ -14,7 +14,7 @@ interface CssTagFunction {
 }
 
 export const css: CssTagFunction = () => {
-  throw new Error('Using the "css" tag in runtime is not supported. Make sure you have set up the Babel plugin correctly.')
+  throw new Error('[molcss]: Using the "css" tag in runtime is not supported. Make sure you have set up the Vite plugin or webpack plugin correctly.')
 }
 
 const getPropertyData = (str: string) => {
