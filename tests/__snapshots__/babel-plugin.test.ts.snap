@@ -3,7 +3,7 @@
 exports[`css\`\${...}\` 1`] = `
 "const cssColor = 'blue';
 ({
-  className: \\"c1 m1\\",
+  className: \\"c0 m0\\",
   runtime: [[\\"bL\\", cssColor], [\\"bM\\", \\"1px solid \\" + cssColor]]
 });"
 `;

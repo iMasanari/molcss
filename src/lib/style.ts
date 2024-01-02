@@ -36,9 +36,9 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
     meta: new Map<string, string>(),
   }))
 
-  const styleValueName = getOrCreate(stylePropData.values, result.value.join('\n'), (v) =>
-    v.size.toString()
-  )
+  const styleValueName = result.value.length
+    ? getOrCreate(stylePropData.values, result.value.join('\n'), (v) => v.size.toString())
+    : '00' // ランタイムスタイルのキー取得用
 
   const styleMetaName = result.media || result.selector !== '&\f'
     ? getOrCreate(stylePropData.meta, `${result.media}{${result.selector}`, (v) => convertToAlphabet(v.size))
