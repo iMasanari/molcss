@@ -22,7 +22,7 @@ it('css`...`', async () => {
     plugins: [[plugin, { devLabel: false }]],
   })
 
-  expect(actual?.code).toMatchInlineSnapshot('"\\"c0\\";"')
+  expect(actual?.code).toMatchInlineSnapshot(`""c0";"`)
   expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
     ".c0{color:red}
     "
@@ -48,8 +48,8 @@ it('css`${...}`', async () => {
   expect(actual?.code).toMatchInlineSnapshot(`
     "const cssColor = 'blue';
     ({
-      className: \\"c0 m0\\",
-      runtime: [[\\"bL\\", cssColor], [\\"bM\\", \\"1px solid \\" + cssColor]]
+      className: "c0 m0",
+      runtime: [["bL", cssColor], ["bM", "1px solid " + cssColor]]
     });"
   `)
 
@@ -74,9 +74,7 @@ it('devLabel option (identifier)', async () => {
     plugins: [[plugin, { devLabel: true }]],
   })
 
-  expect(actual?.code).toMatchInlineSnapshot(`
-    "const identifierStyle = \\"DEV-devLabelOptionIdentifier-identifierStyle c0\\";"
-  `)
+  expect(actual?.code).toMatchInlineSnapshot(`"const identifierStyle = "DEV-devLabelOptionIdentifier-identifierStyle c0";"`)
 
   expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
     ".c0{color:red}
@@ -105,8 +103,8 @@ it('devLabel option (object)', async () => {
 
   expect(actual?.code).toMatchInlineSnapshot(`
     "const objectStyle = {
-      identifierStyle: \\"DEV-devLabelOptionObject-identifierStyle c0\\",
-      'literalStyle': \\"DEV-devLabelOptionObject-literalStyle c1\\"
+      identifierStyle: "DEV-devLabelOptionObject-identifierStyle c0",
+      'literalStyle': "DEV-devLabelOptionObject-literalStyle c1"
     };"
   `)
 
@@ -147,13 +145,13 @@ it('devLabel option (function)', async () => {
 
   expect(actual?.code).toMatchInlineSnapshot(`
     "function functionDeclaration() {
-      \\"DEV-devLabelOptionFunction-functionDeclaration c0\\";
+      "DEV-devLabelOptionFunction-functionDeclaration c0";
     }
     const _ = function functionExpression() {
-      \\"DEV-devLabelOptionFunction-functionExpression c1\\";
+      "DEV-devLabelOptionFunction-functionExpression c1";
     };
     const variableDeclaration = function () {
-      \\"DEV-devLabelOptionFunction-variableDeclaration c2\\";
+      "DEV-devLabelOptionFunction-variableDeclaration c2";
     };"
   `)
 
@@ -202,17 +200,17 @@ it('devLabel option (class)', async () => {
   expect(actual?.code).toMatchInlineSnapshot(`
     "class ClassDeclaration {
       render() {
-        \\"DEV-devLabelOptionClass-ClassDeclaration c0\\";
+        "DEV-devLabelOptionClass-ClassDeclaration c0";
       }
     }
     const _ = class ClassExpression {
       render() {
-        \\"DEV-devLabelOptionClass-ClassExpression c1\\";
+        "DEV-devLabelOptionClass-ClassExpression c1";
       }
     };
     const VariableDeclaration = class {
       render() {
-        \\"DEV-devLabelOptionClass-VariableDeclaration c2\\";
+        "DEV-devLabelOptionClass-VariableDeclaration c2";
       }
     };"
   `)

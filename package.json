@@ -60,11 +60,11 @@
   "author": "iMasanari",
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.22.9",
-    "@rollup/pluginutils": "^5.0.2",
-    "fast-glob": "^3.3.1",
-    "stylis": "^4.3.0",
-    "webpack-virtual-modules": "^0.5.0"
+    "@babel/core": "^7.23.7",
+    "@rollup/pluginutils": "^5.1.0",
+    "fast-glob": "^3.3.2",
+    "stylis": "^4.3.1",
+    "webpack-virtual-modules": "^0.6.1"
   },
   "peerDependencies": {
     "@types/react": ">= 17",
@@ -79,17 +79,17 @@
     }
   },
   "devDependencies": {
-    "@types/babel__core": "^7.20.1",
-    "@types/react": "^18.2.28",
-    "@types/stylis": "^4.2.0",
-    "esbuild-register": "^3.4.2",
-    "jsdom": "^22.1.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/react": "^18.2.46",
+    "@types/stylis": "^4.2.5",
+    "esbuild-register": "^3.5.0",
+    "jsdom": "^23.0.1",
     "react": "^18.2.0",
-    "rollup": "^3.27.0",
-    "rollup-plugin-dts": "^5.3.1",
-    "rollup-plugin-esbuild": "^5.0.0",
-    "typescript": "^5.1.6",
-    "vitest": "^0.33.0",
-    "webpack": "^5.88.2"
+    "rollup": "^4.9.2",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.1",
+    "webpack": "^5.89.0"
   }
 }
