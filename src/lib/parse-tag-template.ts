@@ -33,7 +33,7 @@ export const parseTagTemplate = <T>(quasis: string[], expressions: T[], styleCon
         continue
       }
 
-      const classPropKey = createRuntimeKey(styleData, styleContext)
+      const classPropKey = createRuntimeKey(styleData, index, styleContext)
 
       styleData.values[index] = `var(--molcss-${classPropKey})`
 

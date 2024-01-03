@@ -47,9 +47,9 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
   return stylePropData.name + styleValueName + styleMetaName
 }
 
-export const createRuntimeKey = (styleData: StyleData, styleContext: StyleContext) => {
+export const createRuntimeKey = (styleData: StyleData, index: number, styleContext: StyleContext) => {
   const token = createClassName({ ...styleData, values: [] }, styleContext)
-  const className = createClassName({ prop: `--molcss-runtime-key-${token}`, values: [], selector: '&\f', media: '' }, styleContext)
+  const className = createClassName({ prop: `--molcss-runtime-key-${token}-${index}`, values: [], selector: '&\f', media: '' }, styleContext)
 
   return className.replace(/\d+$/, '')
 }
@@ -99,5 +99,5 @@ const getStyle = (result: StyleData, className: string) => {
     return result.media ? `${result.media}{${style}}` : style
   })
 
-  return styles.join('')
+  return styles.join(' ')
 }
