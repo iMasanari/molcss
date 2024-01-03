@@ -1,5 +1,5 @@
 import * as ReactJsxRuntime from 'react/jsx-runtime'
-import { Molcss } from './lib/react'
+import { Molcss, createInlineStyleProps } from './lib/react'
 import { correctSSRStyle } from './lib/runtime'
 
 export type { MolcssJSX as JSX } from './lib/jsx-namespace'
@@ -23,14 +23,16 @@ export const jsx = (type: any, props: any, key: any) => {
     return reactJsx(type, props, key)
   }
 
-  return reactJsx(Molcss, { type, props, children: props.children }, key)
+  if (typeof type === 'string') {
+    return reactJsx(type, createInlineStyleProps(props), key)
+  }
+
+  return reactJsx(Molcss, { ...props, css: [type, props.css] }, key)
 }
 
 export const jsxs = (type: any, props: any, key: any) => {
   if (!moved) {
-    typeof document !== 'undefined' && document.querySelectorAll('body [data-molcss]').forEach(v => {
-      document.head.appendChild(v)
-    })
+    correctSSRStyle()
 
     moved = true
   }
@@ -39,5 +41,9 @@ export const jsxs = (type: any, props: any, key: any) => {
     return reactJsxs(type, props, key)
   }
 
-  return reactJsxs(Molcss, { type, props, children: props.children }, key)
+  if (typeof type === 'string') {
+    return reactJsxs(type, createInlineStyleProps(props), key)
+  }
+
+  return reactJsxs(Molcss, { ...props, css: [type, props.css] }, key)
 }

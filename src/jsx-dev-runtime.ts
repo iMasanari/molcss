@@ -1,5 +1,5 @@
 import * as ReactJsxDevRuntime from 'react/jsx-dev-runtime'
-import { Molcss } from './lib/react'
+import { Molcss, createInlineStyleProps } from './lib/react'
 import { correctSSRStyle } from './lib/runtime'
 
 export type { MolcssJSX as JSX } from './lib/jsx-namespace'
@@ -37,9 +37,20 @@ export const jsxDEV = (
     )
   }
 
+  if (typeof type === 'string') {
+    return reactJsxDEV(
+      type,
+      createInlineStyleProps(props),
+      key,
+      isStaticChildren,
+      source,
+      self,
+    )
+  }
+
   return reactJsxDEV(
     Molcss,
-    { type, props, children: props.children },
+    { ...props, css: [type, props.css] },
     key,
     isStaticChildren,
     source,
