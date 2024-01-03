@@ -10,8 +10,10 @@ import { StyleContext, createClassName, createStyle, createStyleContext } from '
 const PACKAGE_NAME = 'molcss'
 
 export interface TransformOptions {
+  filename: string
   babelPresets?: PluginItem[]
   babelPlugins?: PluginItem[]
+  devLabel?: boolean
 }
 
 interface BabelMetaDataWithMolcss extends BabelFileMetadata {
@@ -50,17 +52,18 @@ export default class Transformer {
     return createStyle(this._styleMap)
   }
 
-  async transform(input: string, { babelPlugins, babelPresets }: TransformOptions) {
+  async transform(input: string, { filename, babelPlugins, babelPresets, devLabel }: TransformOptions) {
     const result = await transformAsync(input, {
+      filename,
       plugins: [
         ...(babelPlugins || []),
-        [molcssBabelPlugin, { context: this._context }],
+        [molcssBabelPlugin, { context: this._context, devLabel: devLabel ?? process.env.NODE_ENV !== 'production' }],
       ],
       presets: babelPresets,
       sourceMaps: true,
     })
 
-    let { code, map, metadata } = result!
+    const { code, map, metadata } = result!
 
     if (!code) {
       return

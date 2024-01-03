@@ -8,7 +8,7 @@ export default async function molcssLoader(this: LoaderContext<TransformOptions>
   const options = this.getOptions()
 
   try {
-    const result = await transformer.transform(input, options)
+    const result = await transformer.transform(input, { ...options, filename: this.resourcePath })
 
     if (!result || !result.code) {
       return input

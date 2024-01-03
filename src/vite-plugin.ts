@@ -11,9 +11,10 @@ interface Options {
   content: string | string[]
   babelPresets?: PluginItem[]
   babelPlugins?: PluginItem[]
+  devLabel?: boolean
 }
 
-export default function molcss({ include, exclude, content, babelPresets, babelPlugins }: Options): Plugin {
+export default function molcss({ include, exclude, content, babelPresets, babelPlugins, devLabel }: Options): Plugin {
   const filter = createFilter(include || /\.(jsx?|tsx?|cjs|mjs)$/, exclude)
 
   const transformer = new Transformer()
@@ -61,7 +62,7 @@ export default function molcss({ include, exclude, content, babelPresets, babelP
         return
       }
 
-      return await transformer.transform(input, { babelPresets, babelPlugins })
+      return await transformer.transform(input, { filename: id, babelPresets, babelPlugins, devLabel })
     },
   }
 }

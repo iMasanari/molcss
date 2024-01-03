@@ -9,6 +9,7 @@ const IMPORT_STYLE_PATH = 'molcss/style.css'
 
 export interface MolcssWebpackOptions extends TransformOptions {
   content: string | string[]
+  devLabel?: boolean
 }
 
 export const loader = 'molcss/webpack-loader'

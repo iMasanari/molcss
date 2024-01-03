@@ -1,6 +1,7 @@
+import { basename, extname } from 'node:path'
 import { type NodePath, type PluginObj, type types as t } from '@babel/core'
 import { mergeStyle } from './client'
-import { StyleData, parse } from './lib/css-parser'
+import { StyleData } from './lib/css-parser'
 import { parseTagTemplate } from './lib/parse-tag-template'
 import { StyleContext, createClassName, createStyleContext } from './lib/style'
 
@@ -15,6 +16,7 @@ interface PluginOptions {
 
 interface MolcssOptions {
   context?: StyleContext
+  devLabel?: boolean
 }
 
 const removeUnusedImports = (path: NodePath<t.ImportSpecifier>) => {
@@ -33,6 +35,53 @@ const removeUnusedImports = (path: NodePath<t.ImportSpecifier>) => {
   }
 }
 
+const getFileBaseName = (fileName: string) =>
+  basename(fileName, extname(fileName)).replace(/\W+(\w)/g, (_, char) => char.toUpperCase()).replace(/\W+$/g, '')
+
+const getLocalName = (path: NodePath): string | null => {
+  if (path.isVariableDeclarator()) {
+    const target = path.node.id
+
+    if (target.type === 'Identifier') {
+      return target.name
+    }
+  }
+
+  if (path.isProperty()) {
+    const target = path.node.key
+
+    if (target.type === 'Identifier') {
+      return target.name
+    }
+
+    if (target.type === 'StringLiteral') {
+      return target.value
+    }
+  }
+
+  if (path.isFunctionDeclaration() || path.isFunctionExpression()) {
+    const target = path.node.id
+
+    if (target) {
+      return target.name
+    }
+  }
+
+  if (path.isClassDeclaration() || path.isClassExpression()) {
+    const target = path.node.id
+
+    if (target) {
+      return target.name
+    }
+  }
+
+  if (path.parentPath) {
+    return getLocalName(path.parentPath)
+  }
+
+  return null
+}
+
 export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): PluginObj => {
   const styleContext = options.context || createStyleContext()
   const styleMap = new Map<string, StyleData>()
@@ -40,7 +89,7 @@ export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): Plugi
   return {
     name: 'molcss/babel-plugin',
     visitor: {
-      ImportSpecifier(path) {
+      ImportSpecifier(path, state) {
         if (path.parent.type !== 'ImportDeclaration' || path.parent.source.value !== PACKAGE_NAME) {
           return
         }
@@ -78,7 +127,10 @@ export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): Plugi
             styleMap.set(classNames[i]!, style)
           }
 
-          const className = mergeStyle(...classNames)
+          const fileName = getFileBaseName(state.filename || 'ANONYMOUS')
+          const localName = getLocalName(target) || 'ANONYMOUS'
+
+          const className = mergeStyle(options.devLabel && `DEV-${fileName}-${localName}`, ...classNames)
 
           if (result.runtimeStyles.length) {
             const node = t.objectExpression([
