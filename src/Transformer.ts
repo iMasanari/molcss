@@ -16,7 +16,7 @@ export interface TransformOptions {
   devLabel?: boolean
 }
 
-interface BabelMetaDataWithMolcss extends BabelFileMetadata {
+export interface BabelMetaDataWithMolcss extends BabelFileMetadata {
   [PACKAGE_NAME]: Map<string, StyleData> | undefined
 }
 

@@ -55,7 +55,7 @@ export const createRuntimeKey = (styleData: StyleData, styleContext: StyleContex
 }
 
 export const createStyle = (styleMap: Map<string, StyleData>) => {
-  return [...styleMap.entries()].sort(sortFn).map(([className, data]) => getStyle(data, className)).join(' ') + '\n'
+  return [...styleMap.entries()].sort(sortFn).map(([className, data]) => getStyle(data, className)).join('\n') + '\n'
 }
 
 const isShorthand = (prop: string) => {

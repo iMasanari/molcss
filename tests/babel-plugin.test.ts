@@ -1,6 +1,13 @@
-import { transformAsync } from '@babel/core'
+import { BabelFileResult, transformAsync } from '@babel/core'
 import { expect, it } from 'vitest'
 import plugin from '../src/babel-plugin'
+import { createStyle } from '../src/lib/style'
+
+const createStyleFromActual = (actual: BabelFileResult) => {
+  const styleData = (actual.metadata as any).molcss
+
+  return createStyle(styleData)
+}
 
 it('css`...`', async () => {
   const code = `
@@ -15,15 +22,11 @@ it('css`...`', async () => {
     plugins: [[plugin, { devLabel: false }]],
   })
 
-  const classNames = [...(actual?.metadata as any).molcss.keys()]
-
-  expect(classNames.length).toBe(1)
-  expect(classNames).toMatchInlineSnapshot(`
-    [
-      "c0",
-    ]
-  `)
   expect(actual?.code).toMatchInlineSnapshot('"\\"c0\\";"')
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".c0{color:red}
+    "
+  `)
 })
 
 it('css`${...}`', async () => {
@@ -49,6 +52,12 @@ it('css`${...}`', async () => {
       runtime: [[\\"bL\\", cssColor], [\\"bM\\", \\"1px solid \\" + cssColor]]
     });"
   `)
+
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".m0{border:var(--molcss-bM)}
+    .c0{color:var(--molcss-bL)}
+    "
+  `)
 })
 
 it('devLabel option (identifier)', async () => {
@@ -67,6 +76,11 @@ it('devLabel option (identifier)', async () => {
 
   expect(actual?.code).toMatchInlineSnapshot(`
     "const identifierStyle = \\"DEV-devLabelOptionIdentifier-identifierStyle c0\\";"
+  `)
+
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".c0{color:red}
+    "
   `)
 })
 
@@ -94,6 +108,12 @@ it('devLabel option (object)', async () => {
       identifierStyle: \\"DEV-devLabelOptionObject-identifierStyle c0\\",
       'literalStyle': \\"DEV-devLabelOptionObject-literalStyle c1\\"
     };"
+  `)
+
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".c0{color:red}
+    .c1{color:green}
+    "
   `)
 })
 
@@ -135,6 +155,13 @@ it('devLabel option (function)', async () => {
     const variableDeclaration = function () {
       \\"DEV-devLabelOptionFunction-variableDeclaration c2\\";
     };"
+  `)
+
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".c0{color:red}
+    .c1{color:green}
+    .c2{color:blue}
+    "
   `)
 })
 
@@ -188,5 +215,12 @@ it('devLabel option (class)', async () => {
         \\"DEV-devLabelOptionClass-VariableDeclaration c2\\";
       }
     };"
+  `)
+
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".c0{color:red}
+    .c1{color:green}
+    .c2{color:blue}
+    "
   `)
 })
