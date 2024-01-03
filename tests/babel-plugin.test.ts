@@ -18,8 +18,12 @@ it('css`...`', async () => {
   const classNames = [...(actual?.metadata as any).molcss.keys()]
 
   expect(classNames.length).toBe(1)
-  expect(classNames).matchSnapshot()
-  expect(actual?.code).matchSnapshot()
+  expect(classNames).toMatchInlineSnapshot(`
+    [
+      "c0",
+    ]
+  `)
+  expect(actual?.code).toMatchInlineSnapshot('"\\"c0\\";"')
 })
 
 it('css`${...}`', async () => {
@@ -38,7 +42,13 @@ it('css`${...}`', async () => {
     plugins: [[plugin, { devLabel: false }]],
   })
 
-  expect(actual?.code).matchSnapshot()
+  expect(actual?.code).toMatchInlineSnapshot(`
+    "const cssColor = 'blue';
+    ({
+      className: \\"c0 m0\\",
+      runtime: [[\\"bL\\", cssColor], [\\"bM\\", \\"1px solid \\" + cssColor]]
+    });"
+  `)
 })
 
 it('devLabel option (identifier)', async () => {
