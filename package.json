@@ -55,7 +55,9 @@
   "scripts": {
     "generate": "node -r esbuild-register scripts/defineCssProperties.ts",
     "build": "rollup -c rollup.config.mjs",
-    "test": "vitest run"
+    "test": "npm run test:node && npm run test:browser",
+    "test:node": "vitest run --exclude \"tests/browser/**/*\"",
+    "test:browser": "vitest run tests/browser/ --browser"
   },
   "author": "iMasanari",
   "license": "MIT",
@@ -79,9 +81,13 @@
     }
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.6",
+    "@testing-library/react": "^14.1.2",
     "@types/babel__core": "^7.20.5",
     "@types/react": "^18.2.46",
     "@types/stylis": "^4.2.5",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/browser": "^1.1.1",
     "esbuild-register": "^3.5.0",
     "jsdom": "^23.0.1",
     "react": "^18.2.0",
@@ -90,6 +96,7 @@
     "rollup-plugin-esbuild": "^6.1.0",
     "typescript": "^5.3.3",
     "vitest": "^1.1.1",
+    "webdriverio": "^8.27.0",
     "webpack": "^5.89.0"
   }
 }

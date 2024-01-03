@@ -21,6 +21,9 @@
     "paths": {
       "molcss": [
         "./src/client.ts"
+      ],
+      "molcss/react/jsx-runtime": [
+        "./src/jsx-runtime.ts"
       ]
     }
   },
