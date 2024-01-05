@@ -1,57 +1,47 @@
 import React, { forwardRef } from 'react'
 import { mergeStyle } from '../client'
+import { CacheableRuntimeStyleData, generateRuntimeStyle } from '../lib/runtime'
+import { MolcssStyle } from '../nextjs.use-client'
 import { CssProp, CssPropValue } from './jsx-namespace'
-import { CacheableRuntimeStyleData, generateRuntimeStyle, insertStyle } from './runtime'
-
-const useInsertionEffect = typeof window !== 'undefined'
-  ? React['useInsertionEffect'] || React['useLayoutEffect']
-  : () => { }
 
 const useRuntimeStyle = (css: CssProp) => {
-  const list: CacheableRuntimeStyleData[] = []
-  const addList = (v: CacheableRuntimeStyleData) => list.push(v)
+  const styleData: CacheableRuntimeStyleData[] = []
+  const addStyleData = (v: CacheableRuntimeStyleData) => styleData.push(v)
 
   const styles = Array.isArray(css) ? css : [css]
 
   const classNames = styles.flatMap(style =>
     style && typeof style === 'object'
-      ? style.runtime.reduce((acc, v) => `${acc} ${generateRuntimeStyle(v[0], v[1], addList)}`, style.className)
+      ? style.runtime.reduce((acc, v) => `${acc} ${generateRuntimeStyle(v[0], v[1], addStyleData)}`, style.className)
       : style || []
   )
 
-  useInsertionEffect(() => {
-    list.forEach(v => insertStyle(v))
-  }, [list])
+  const cssText = styleData.map(v => `.${v.className}{${v.prop}:${v.value}}`).join('')
+  const tag = styleData.map(v => v.className).join(' ')
 
-  const cssText = list.map(v => `.${v.className}{${v.prop}:${v.value}}`).join('')
-  const tag = list.map(v => v.className).join(' ')
-
-  return { classNames, cssText, tag }
+  return { classNames, cssText, tag, styleData }
 }
 
 export const Molcss = forwardRef((props: any, ref: any) => {
-  const isSSR = typeof document === 'undefined'
-
   const WrappedComponent = props.css[0]
   const styles = useRuntimeStyle(props.css[1])
 
   const newProps = {
     ...props,
     ref,
-    css: undefined,
+    // css: undefined,
     className: mergeStyle(props.className, ...styles.classNames),
   }
 
-  if (isSSR && styles.cssText) {
-    return (
-      <>
-        <style data-molcss={styles.tag} dangerouslySetInnerHTML={{ __html: styles.cssText }} />
-        <WrappedComponent {...newProps} />
-      </>
-    )
-  }
+  // remove css props
+  delete newProps.css
 
-  return <WrappedComponent {...newProps} />
+  return (
+    <>
+      <MolcssStyle styles={styles} />
+      <WrappedComponent {...newProps} />
+    </>
+  )
 })
 
 export const createInlineStyleProps = (props: any) => {

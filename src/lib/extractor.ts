@@ -1,3 +1,5 @@
+import { escapeRegExp } from '../utils/regExp'
+
 const separator = ':::MOLCSS_SEPARATOR:::'
 
 const contextTokens = [
@@ -15,12 +17,6 @@ const contextTokens = [
 ] as const
 
 type DefineToken = typeof contextTokens[number]
-
-const escapeRegExp = (string: string) =>
-  string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
-
-const createTokenRegExp = (tag: string) =>
-  new RegExp(`(${[tag, ...contextTokens].map(v => escapeRegExp(v)).join('|')})`)
 
 interface RootMode {
   type: 'Root'
@@ -231,6 +227,9 @@ const reducer = (state: Mode, tokens: string[]): string | null => {
     }
   }
 }
+
+const createTokenRegExp = (tag: string) =>
+  new RegExp(`(${[tag, ...contextTokens].map(escapeRegExp).join('|')})`)
 
 export const extract = (source: string, tag: string) => {
   const tokens = source.split(createTokenRegExp(tag)).filter(Boolean)

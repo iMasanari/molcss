@@ -2,24 +2,17 @@ import { hash } from '../utils/hash'
 
 const hashSeed = 0x0000
 
-const ssrStyleCache = new Set<string>()
+const ssrStyleCache = /* @__PURE__ */ new Set<string>(
+  typeof document !== 'undefined'
+    ? Array.from(document.head.querySelectorAll<HTMLElement>('style[data-molcss]')).flatMap(v => {
+      const tags = v.dataset.molcss
+
+      return tags ? tags.split(' ') : []
+    })
+    : []
+)
+
 const runtimStyleDataCache = new Map<string, string>()
-
-export const correctSSRStyle = () => {
-  if (typeof document === 'undefined') {
-    return
-  }
-
-  document.body.querySelectorAll<HTMLElement>('[data-molcss]').forEach(v => {
-    const tags = v.dataset.molcss
-
-    if (tags) {
-      tags.split(' ').forEach(v => ssrStyleCache.add(v))
-    }
-
-    document.head.appendChild(v)
-  })
-}
 
 let _style: HTMLStyleElement | undefined
 

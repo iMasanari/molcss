@@ -19,17 +19,23 @@ const config = defineConfig({
   ],
 })
 
+const banner = (/** @type {import('rollup').RenderedChunk} */ v) =>
+  v.fileName.includes('.use-client.') ? `'use client';` : ''
+
 export default defineConfig([
   {
     ...config,
     input: {
       'molcss': './src/client.ts',
+      'server': './src/server.ts',
+      'react/react': './src/react.tsx',
       'react/jsx-runtime': './src/jsx-runtime.ts',
       'react/jsx-dev-runtime': './src/jsx-dev-runtime.ts',
+      'react/nextjs.use-client': './src/nextjs.use-client.tsx',
     },
     output: [
-      { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk/[name].mjs' },
-      { format: 'cjs', dir: 'dist', entryFileNames: '[name].js', chunkFileNames: 'chunk/[name].js', exports: 'named', interop: 'auto' },
+      { format: 'esm', dir: 'dist', entryFileNames: '[name].mjs', chunkFileNames: 'chunk/[name].mjs', banner },
+      { format: 'cjs', dir: 'dist', entryFileNames: '[name].js', chunkFileNames: 'chunk/[name].js', banner, exports: 'named', interop: 'auto' },
     ],
   }, {
     ...config,
@@ -46,8 +52,11 @@ export default defineConfig([
   }, {
     input: {
       'molcss': './src/client.ts',
+      'server': './src/server.ts',
+      'react/react': './src/react.tsx',
       'react/jsx-runtime': './src/jsx-runtime.ts',
       'react/jsx-dev-runtime': './src/jsx-dev-runtime.ts',
+      'react/nextjs.use-client': './src/nextjs.use-client.tsx',
       'vite/vite-plugin': './src/vite-plugin.ts',
       'webpack/webpack-loader': './src/webpack-loader.ts',
       'webpack/webpack-plugin': './src/webpack-plugin.ts',

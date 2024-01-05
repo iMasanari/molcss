@@ -1,6 +1,7 @@
 /** @jsxImportSource molcss/react */
 
 import 'virtual:molcss/style.css'
+
 import { render, screen } from '@testing-library/react'
 import { css } from 'molcss'
 import { expect, test } from 'vitest'

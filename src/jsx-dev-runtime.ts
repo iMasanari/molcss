@@ -1,16 +1,13 @@
 import * as ReactJsxDevRuntime from 'react/jsx-dev-runtime'
-import { Molcss, createInlineStyleProps } from './lib/react'
-import { correctSSRStyle } from './lib/runtime'
+import { Molcss, createInlineStyleProps } from './react/react-jsx'
 
-export type { MolcssJSX as JSX } from './lib/jsx-namespace'
+export type { MolcssJSX as JSX } from './react/jsx-namespace'
 
 const { jsxDEV: reactJsxDEV, Fragment } = ReactJsxDevRuntime as any
 
 const hasOwn = Object.prototype.hasOwnProperty
 
 export { Fragment }
-
-let moved = false
 
 export const jsxDEV = (
   type: any,
@@ -20,12 +17,6 @@ export const jsxDEV = (
   source: any,
   self: any
 ) => {
-  if (!moved) {
-    correctSSRStyle()
-
-    moved = true
-  }
-
   if (!hasOwn.call(props, 'css')) {
     return reactJsxDEV(
       type,

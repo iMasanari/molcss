@@ -10,6 +10,16 @@
       "import": "./dist/molcss.mjs",
       "require": "./dist/molcss.js"
     },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.mjs",
+      "require": "./dist/server.js"
+    },
+    "./react": {
+      "types": "./dist/react/react.d.ts",
+      "import": "./dist/react/react.mjs",
+      "require": "./dist/react/react.js"
+    },
     "./react/jsx-runtime": {
       "types": "./dist/react/jsx-runtime.d.ts",
       "import": "./dist/react/jsx-runtime.mjs",

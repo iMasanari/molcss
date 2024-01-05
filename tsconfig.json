@@ -11,7 +11,7 @@
       "dom.iterable",
       "es2020"
     ],
-    "jsx": "preserve",
+    "jsx": "react",
     "skipLibCheck": true,
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
