@@ -67,10 +67,15 @@
     "build": "rollup -c rollup.config.mjs",
     "test": "npm run test:node && npm run test:browser",
     "test:node": "vitest run --exclude \"tests/browser/**/*\"",
-    "test:browser": "vitest run tests/browser/ --browser"
+    "test:browser": "vitest run tests/browser/ --browser",
+    "website:dev": "npm run dev -w website",
+    "website:build": "npm run build -w website"
   },
   "author": "iMasanari",
   "license": "MIT",
+  "workspaces": [
+    "website"
+  ],
   "dependencies": {
     "@babel/core": "^7.23.7",
     "@rollup/pluginutils": "^5.1.0",
