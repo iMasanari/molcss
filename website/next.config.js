@@ -7,6 +7,7 @@ const plugin = new MolcssPlugin({
 /** @type {import('next').NextConfig} */
 module.exports = {
   output: 'export',
+  trailingSlash: true,
   webpack(config) {
     config.plugins.unshift(plugin)
 
