@@ -45,7 +45,7 @@ export default function molcss({ include, exclude, content, babelPresets, babelP
         return `\0${importee}`
       }
 
-      // NOTE: vite requests path with `.../�virtual:molcss/style.css`
+      // NOTE: Astro requests path with `.../�virtual:molcss/style.css`
       if (importee.endsWith(`/�${STYLE_PATH}`)) {
         return `\0${STYLE_PATH}`
       }
