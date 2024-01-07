@@ -1,10 +1,9 @@
 import { COMMENT, compile, DECLARATION, Element, MEDIA, RULESET } from 'stylis'
 
 export interface StyleData {
-  media: string
   selector: string
   prop: string
-  values: string[]
+  values: { value: string, media: string }[]
 }
 
 export const parse = (style: string): StyleData[] => {
@@ -13,13 +12,12 @@ export const parse = (style: string): StyleData[] => {
 
   return [...new Set(analyzed.map(v => v.group))].map(group => {
     const list = analyzed.filter(v => v.group === group)
-    const { media, selector, prop } = list[0]!
+    const { selector, prop } = list[0]!
 
     return {
-      media,
       selector,
       prop,
-      values: list.map(v => v.value),
+      values: list.map(({ value, media }) => ({ value, media })),
     }
   })
 }
@@ -38,7 +36,7 @@ const analyzeStylisElement = (element: Element, media: string, selector: string)
       // prop: value;
       const prop = element.props as string
       const value = element.children as string
-      const group = `${media}{${selector || '&\f'}{${prop}`
+      const group = `${selector || '&\f'}{${prop}`
 
       return [{ group, media, selector: selector || '&\f', prop, value }]
     }

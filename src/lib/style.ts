@@ -37,19 +37,19 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
   }))
 
   const styleValueName = result.values.length
-    ? getOrCreate(stylePropData.values, result.values.join('\n'), (v) => v.size.toString())
+    ? getOrCreate(stylePropData.values, result.values.map(v => `${v.media}{${v.value}`).join('\n'), (v) => v.size.toString())
     : '00' // ランタイムスタイルのキー取得用
 
-  const styleMetaName = result.media || result.selector !== '&\f'
-    ? getOrCreate(stylePropData.meta, `${result.media}{${result.selector}`, (v) => convertToAlphabet(v.size))
+  const styleSelectorName = result.selector !== '&\f'
+    ? getOrCreate(stylePropData.meta, result.selector, (v) => convertToAlphabet(v.size))
     : ''
 
-  return stylePropData.name + styleValueName + styleMetaName
+  return stylePropData.name + styleValueName + styleSelectorName
 }
 
 export const createRuntimeKey = (styleData: StyleData, index: number, styleContext: StyleContext) => {
   const token = createClassName({ ...styleData, values: [] }, styleContext)
-  const className = createClassName({ prop: `--molcss-runtime-key-${token}-${index}`, values: [], selector: '&\f', media: '' }, styleContext)
+  const className = createClassName({ prop: `--molcss-runtime-key-${token}-${index}`, values: [], selector: '&\f' }, styleContext)
 
   return className.replace(/\d+$/, '')
 }
@@ -68,14 +68,7 @@ const isShorthand = (prop: string) => {
   return hasOwn.call(shorthands, key)
 }
 
-const sortFn = ([, a]: [string, StyleData], [, b]: [string, StyleData]) => {
-  if (a.media !== b.media) {
-    if (!a.media) return -1
-    if (!b.media) return 1
-
-    return a.media > b.media ? -1 : 1
-  }
-
+const sortFn = ([, a]: [unknown, StyleData], [, b]: [unknown, StyleData]) => {
   const aIsShorthand = isShorthand(a.prop)
 
   if (aIsShorthand !== isShorthand(b.prop)) {
@@ -94,9 +87,9 @@ const getStyle = (result: StyleData, className: string) => {
   const selector = result.selector.replace(/&\f?/g, `.${className}`)
 
   const styles = result.values.map(v => {
-    const style = `${selector}{${result.prop}:${v}}`
+    const style = `${selector}{${result.prop}:${v.value}}`
 
-    return result.media ? `${result.media}{${style}}` : style
+    return v.media ? `${v.media}{${style}}` : style
   })
 
   return styles.join(' ')

@@ -26,7 +26,7 @@ export const parseTagTemplate = <T>(quasis: string[], expressions: T[], styleCon
   const runtimeStyles: RuntimeStyleData<T>[] = []
 
   for (const styleData of styles) {
-    for (const [index, value] of styleData.values.entries()) {
+    for (const [index, { value }] of styleData.values.entries()) {
       const list = value.split(/(__MOLCSS_VALUE_\d+__)/)
 
       if (list.length < 2) {
@@ -35,7 +35,7 @@ export const parseTagTemplate = <T>(quasis: string[], expressions: T[], styleCon
 
       const classPropKey = createRuntimeKey(styleData, index, styleContext)
 
-      styleData.values[index] = `var(--molcss-${classPropKey})`
+      styleData.values[index]!.value = `var(--molcss-${classPropKey})`
 
       runtimeStyles.push({
         prop: classPropKey,

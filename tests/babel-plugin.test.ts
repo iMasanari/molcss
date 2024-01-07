@@ -278,3 +278,53 @@ describe('devLabel option', () => {
     `)
   })
 })
+
+describe('createStyle', () => {
+  it('order of style', async () => {
+    const code = `
+      import { css } from "molcss";
+      
+      css\`
+        padding: 10px 1px;
+        &:hover {
+          padding: 10px 2px;
+        }
+        @media screen and (min-width: 300px) {
+          padding: 10px 3px;
+        }
+        @media screen and (min-width: 600px) {
+          padding: 10px 4px;
+        }
+      \`;
+
+      css\`
+        padding: 20px 1px;
+        &:hover {
+          padding: 20px 2px;
+        }
+        @media screen and (max-width: 600px) {
+          padding: 20px 3px;
+        }
+        @media screen and (max-width: 300px) {
+          padding: 20px 4px;
+        }
+      \`;
+    `
+
+    const actual = await transformAsync(code, {
+      plugins: [[plugin, { devLabel: false }]],
+    })
+
+    expect(actual?.code).toMatchInlineSnapshot(`
+      ""a0 a1a";
+      "a2 a3a";"
+    `)
+    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+      ".a1a:hover{padding:10px 2px}
+      .a3a:hover{padding:20px 2px}
+      .a0{padding:10px 1px} @media screen and (min-width: 300px){.a0{padding:10px 3px}} @media screen and (min-width: 600px){.a0{padding:10px 4px}}
+      .a2{padding:20px 1px} @media screen and (max-width: 600px){.a2{padding:20px 3px}} @media screen and (max-width: 300px){.a2{padding:20px 4px}}
+      "
+    `)
+  })
+})
