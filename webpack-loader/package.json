@@ -1,5 +1,0 @@
-{
-  "main": "../dist/webpack/webpack-loader.js",
-  "module": "../dist/webpack/webpack-loader.mjs",
-  "types": "../dist/webpack/webpack-loader.d.ts"
-}

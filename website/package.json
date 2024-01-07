@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "predev": "rm -rf .next/cache",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -15,16 +14,11 @@
     "@types/react-dom": "^18.2.18",
     "molcss": "../",
     "next": "^14.0.4",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-preset-env": "^9.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "shiki": "^0.14.7",
     "typescript": "^5.3.3"
-  },
-  "browserslist": [
-    "chrome 64",
-    "edge 79",
-    "firefox 67",
-    "opera 51",
-    "safari 13"
-  ]
+  }
 }

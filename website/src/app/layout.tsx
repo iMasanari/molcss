@@ -1,7 +1,7 @@
 import 'molcss/style.css'
 
 import { css } from 'molcss'
-import { SSRProvider, createCache } from 'molcss/react'
+import { SSRProvider } from 'molcss/react'
 import { type Metadata } from 'next'
 import Footer from './Footer'
 import Header from './Header'

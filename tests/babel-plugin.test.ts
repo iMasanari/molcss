@@ -1,7 +1,7 @@
 import { BabelFileResult, transformAsync } from '@babel/core'
 import { expect, it, describe } from 'vitest'
 import plugin from '../src/babel-plugin'
-import { createStyle } from '../src/lib/style'
+import { createStyle, createStyleContext } from '../src/lib/style'
 
 const createStyleFromActual = (actual: BabelFileResult) => {
   const styleData = (actual.metadata as any).molcss
@@ -20,7 +20,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false }]],
+      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`""c0";"`)
@@ -43,7 +43,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false }]],
+      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
@@ -72,7 +72,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false }]],
+      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`""g0";"`)
@@ -96,7 +96,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false }]],
+      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
@@ -139,7 +139,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false }]],
+      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
@@ -169,7 +169,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (identifier)',
-      plugins: [[plugin, { devLabel: true }]],
+      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`"const identifierStyle = "DEV-devLabelOptionIdentifier-identifierStyle c0";"`)
@@ -196,7 +196,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (object)',
-      plugins: [[plugin, { devLabel: true }]],
+      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
@@ -238,7 +238,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (function).js',
-      plugins: [[plugin, { devLabel: true }]],
+      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
@@ -292,7 +292,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (class).js',
-      plugins: [[plugin, { devLabel: true }]],
+      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
@@ -355,7 +355,7 @@ describe('createStyle', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false }]],
+      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`

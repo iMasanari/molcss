@@ -1,10 +1,15 @@
+import { babel } from '@rollup/plugin-babel'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import molcss from './src/vite-plugin'
+import molcssBabelPlugin from './src/babel-plugin'
+import { createContext } from './src/context'
+
+const molcssContext = createContext()
 
 export default defineConfig({
   resolve: {
     alias: [
+      { find: 'molcss/style.css', replacement: `${__dirname}/style.css` },
       { find: 'molcss/react/jsx-runtime', replacement: `${__dirname}/src/jsx-runtime.ts` },
       { find: 'molcss/react/jsx-dev-runtime', replacement: `${__dirname}/src/jsx-dev-runtime.ts` },
       { find: 'molcss', replacement: `${__dirname}/src/client.ts` },
@@ -14,8 +19,14 @@ export default defineConfig({
     react({
       jsxImportSource: 'molcss/react',
     }),
-    molcss({
-      content: ['tests/**/*.{ts,tsx}'],
+    babel({
+      extensions: ['.js', '.jsx', '.ts', 'tsx'],
+      babelHelpers: 'bundled',
+      plugins: [
+        [molcssBabelPlugin, {
+          context: molcssContext,
+        }],
+      ],
     }),
   ],
   test: {

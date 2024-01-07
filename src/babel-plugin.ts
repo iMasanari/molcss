@@ -3,7 +3,7 @@ import { type NodePath, type PluginObj, type types as t } from '@babel/core'
 import { mergeStyle } from './client'
 import { StyleData } from './lib/css-parser'
 import { parseTagTemplate } from './lib/parse-tag-template'
-import { StyleContext, createClassName, createStyleContext } from './lib/style'
+import { StyleContext, createClassName } from './lib/style'
 
 const PACKAGE_NAME = 'molcss'
 const IMPORTED_NAME = 'css'
@@ -15,7 +15,7 @@ interface PluginOptions {
 }
 
 interface MolcssOptions {
-  context?: StyleContext
+  context: StyleContext
   devLabel?: boolean
 }
 
@@ -82,8 +82,10 @@ const getLocalName = (path: NodePath): string | null => {
   return null
 }
 
-export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): PluginObj => {
-  const styleContext = options.context || createStyleContext()
+const molcssBabelPlugin = ({ types: t }: PluginOptions, options: MolcssOptions): PluginObj => {
+  const styleContext = options.context
+  const devLabel = options.devLabel ?? process.env.NODE_ENV !== 'production'
+
   const styleMap = new Map<string, StyleData>()
 
   return {
@@ -130,7 +132,7 @@ export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): Plugi
           const fileName = getFileBaseName(state.filename || 'ANONYMOUS')
           const localName = getLocalName(target) || 'ANONYMOUS'
 
-          const className = mergeStyle(options.devLabel && `DEV-${fileName}-${localName}`, ...classNames)
+          const className = mergeStyle(devLabel && `DEV-${fileName}-${localName}`, ...classNames)
 
           if (result.runtimeStyles.length) {
             const node = t.objectExpression([
@@ -165,3 +167,5 @@ export default ({ types: t }: PluginOptions, options: MolcssOptions = {}): Plugi
     },
   }
 }
+
+export default molcssBabelPlugin

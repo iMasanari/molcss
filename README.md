@@ -5,8 +5,7 @@ A simple, lightweight, and powerful CSS-in-JS library.
 ## Usage
 
 ```jsx
-import 'virtual:molcss/style.css' // for Vite
-// import 'molcss/style.css'      // for webpack (experimental)
+import 'molcss/style.css'
 import { css } from 'molcss'
 
 const className = css`
@@ -102,29 +101,12 @@ const ForReact = () =>
 
 ## Setup
 
-### Vite
+### Vite + React
 
-```js
-// code
-import 'virtual:molcss/style.css'
+```sh
+npm install molcss
+npm install -D @vitejs/plugin-react
 ```
-
-```js
-// vite.config.js
-import molcss from 'molcss/vite-plugin'
-
-export default defineConfig({
-  // ...
-  plugins: [
-    molcss({
-      content: 'src/**/*.{js,jsx,ts,tsx}',
-    })
-  ],
-  // ...
-})
-```
-
-### Next.js appDir (experimental)
 
 ```js
 // code
@@ -132,51 +114,137 @@ import 'molcss/style.css'
 ```
 
 ```js
-// next.config.js
-const MolcssPlugin = require('molcss/webpack-plugin').default
+// molcss.context.cjs
+const { createContext } = require('molcss/context')
 
-const plugin = new MolcssPlugin({
-  content: [
-    'src/**/*.{js,jsx,ts,tsx}',
-    'app/**/*.{js,jsx,ts,tsx}',
-  ],
+module.exports = createContext()
+```
+
+```js
+// vite.config.js
+import { createRequire } from 'node:module'
+import react from '@vitejs/plugin-react'
+
+const require = createRequire(import.meta.url)
+const molcssContext = require('./molcss.context.cjs')
+
+export default defineConfig({
+  // ...
+  plugins: [
+    react({
+      jsxImportSource: 'molcss/react',
+      babel: {
+        plugins: [
+          ['molcss/babel-plugin', {
+            context: molcssContext,
+          }]
+        ]
+      }
+    })
+  ]
 })
+```
+
+
+```js
+// postcss.config.cjs
+const molcssContext = require('./molcss.context.cjs')
 
 module.exports = {
-  // ...
-  experimental: {
-    appDir: true,
-  },
-  webpack(config) {
-    config.module.rules.unshift({
-      test: /\.(js|jsx|ts|tsx)$/,
-      use: MolcssPlugin.loader,
-    })
-
-    config.plugins.push(plugin)
-
-    return config
-  },
-  // ...
+  plugins: [
+    require('molcss/postcss-plugin')({
+      content: 'src/**/*.{js,jsx,ts,tsx}',
+      context: molcssContext,
+    }),
+  ],
 }
 ```
 
 ```js
-// package.json
+// tsconfig.json (When using TypeScript)
 {
-  // ...
-  "browserslist": [
-    "chrome 64",
-    "edge 79",
-    "firefox 67",
-    "opera 51",
-    "safari 13"
-  ]
+  "compilerOptions": {
+    "jsxImportSource": "molcss/react",
+  }
 }
 ```
 
-Increase the version of Safari from its [default settings](https://nextjs.org/docs/architecture/supported-browsers) to prevent tagged template literals from being converted.
+### Next.js appDir
 
+```sh
+npm install molcss
+npm install postcss-flexbugs-fixes postcss-preset-env
+```
+
+```js
+// code
+import 'molcss/style.css'
+```
+
+```js
+// molcss.context.js
+const { createContext } = require('molcss/context')
+
+module.exports = createContext()
+```
+
+```js
+// babel.config.js
+const molcssContext = require('./molcss.context')
+
+module.exports = {
+  presets: [
+    'next/babel',
+  ],
+  plugins: [
+    // molcss settings
+    ['molcss/babel-plugin', {
+      context: molcssContext,
+    }],
+  ],
+}
+```
+
+```js
+// postcss.config.js
+const molcssContext = require('./molcss.context')
+
+module.exports = {
+  plugins: [
+    // nextjs default settings
+    // https://nextjs.org/docs/pages/building-your-application/configuring/post-css#customizing-plugins
+    'postcss-flexbugs-fixes',
+    ['postcss-preset-env', {
+      autoprefixer: {
+        flexbox: 'no-2009',
+      },
+      stage: 3,
+      features: {
+        'custom-properties': false,
+      },
+    }],
+    // molcss settings
+    ['molcss/postcss-plugin', {
+      content: [
+        'app/**/*.{js,jsx,ts,tsx}',
+        'src/**/*.{js,jsx,ts,tsx}',
+      ],
+      context: molcssContext,
+    }],
+  ],
+}
+```
+
+```js
+// tsconfig.json
+{
+  "compilerOptions": {
+    "jsxImportSource": "molcss/react",
+  }
+}
+```
+
+<!--
 ### webpack (experimental)
 
 ```js
@@ -215,3 +283,4 @@ module.exports = {
   // ...
 }
 ```
+-->
