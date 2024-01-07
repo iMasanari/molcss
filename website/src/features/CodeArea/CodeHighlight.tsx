@@ -83,6 +83,10 @@ const highlight = async (code: string, lang: string) => {
   })
 }
 
+const codeStyle = css`
+  font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
+`
+
 interface Props {
   code: string
   lang: string
@@ -93,7 +97,7 @@ export default async function Code({ code: value, lang }: Props) {
 
   return (
     <code
-      className="notranslate"
+      className={`${codeStyle} notranslate`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )

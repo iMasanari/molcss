@@ -4,8 +4,13 @@ import CodeArea from '../CodeArea/CodeArea'
 
 const rootStyle = css`
   display: flex;
+  flex-direction: column;
   gap: 8px;
   margin: 0 auto;
+
+  @media screen and (min-width: 600px) {
+    flex-direction: row;
+  }
 `
 
 const colStyle = css`
@@ -38,8 +43,7 @@ export default async function Features() {
             <CodeArea title="input.js" code={extractInput} lang="molcss" />
           </div>
           <div className={colStyle}>
-            <CodeArea title="output.js" code={extractOutput} lang="js" />
-            <div className={css`flex: 1;`} />
+            <CodeArea className={css`flex: 1;`} title="output.js" code={extractOutput} lang="js" />
             <CodeArea title="output.css" code={extractOutputCss} lang="css" />
           </div>
         </div>
@@ -62,8 +66,7 @@ export default async function Features() {
             <CodeArea title="input.jsx" code={ssrInput} lang="molcss" />
           </div>
           <div className={colStyle}>
-            <CodeArea title="Result (formatted)" code={ssrOutput} lang="html" />
-            <div className={css`flex: 1;`} />
+            <CodeArea className={css`flex: 1;`} title="Result (formatted)" code={ssrOutput} lang="html" />
             <CodeArea title="output.css" code={ssrOutputCss} lang="css" />
           </div>
         </div>
