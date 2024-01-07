@@ -1,0 +1,10 @@
+/* Keyframes are not yet supported in molcss. */
+@keyframes rotate {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}

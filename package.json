@@ -69,7 +69,8 @@
   "author": "iMasanari",
   "license": "MIT",
   "workspaces": [
-    "website"
+    "website",
+    "examples/next-example"
   ],
   "dependencies": {
     "@babel/core": "^7.23.7",
