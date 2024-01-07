@@ -1,14 +1,14 @@
-import { COMMENT, compile, DECLARATION, Element, MEDIA, RULESET } from 'stylis'
+import { COMMENT, compile, DECLARATION, Element, MEDIA, RULESET, SUPPORTS, LAYER } from 'stylis'
 
 export interface StyleData {
   selector: string
   prop: string
-  values: { value: string, media: string }[]
+  values: { value: string, atRule: string[] }[]
 }
 
 export const parse = (style: string): StyleData[] => {
   const ast = compile(style)
-  const analyzed = ast.flatMap(element => analyzeStylisElement(element, '', ''))
+  const analyzed = ast.flatMap(element => analyzeStylisElement(element, [], ''))
 
   return [...new Set(analyzed.map(v => v.group))].map(group => {
     const list = analyzed.filter(v => v.group === group)
@@ -17,20 +17,20 @@ export const parse = (style: string): StyleData[] => {
     return {
       selector,
       prop,
-      values: list.map(({ value, media }) => ({ value, media })),
+      values: list.map(({ value, atRule }) => ({ value, atRule })),
     }
   })
 }
 
 interface Analyzed {
-  media: string
+  atRule: string[]
   selector: string
   prop: string
   value: string
   group: string
 }
 
-const analyzeStylisElement = (element: Element, media: string, selector: string): Analyzed[] => {
+const analyzeStylisElement = (element: Element, meta: string[], selector: string): Analyzed[] => {
   switch (element.type) {
     case DECLARATION: {
       // prop: value;
@@ -38,24 +38,24 @@ const analyzeStylisElement = (element: Element, media: string, selector: string)
       const value = element.children as string
       const group = `${selector || '&\f'}{${prop}`
 
-      return [{ group, media, selector: selector || '&\f', prop, value }]
-    }
-    case COMMENT: {
-      return []
+      return [{ group, atRule: meta, selector: selector || '&\f', prop, value }]
     }
     case RULESET: {
       // selector { ... }
       const nextSelector = selector ? `${selector} ${element.value}` : element.value
       const children = element.children as Element[]
 
-      return children.flatMap(child => analyzeStylisElement(child, media, nextSelector))
+      return children.flatMap(child => analyzeStylisElement(child, meta, nextSelector))
     }
-    case MEDIA: {
-      const nextMedia = element.value
+    case MEDIA:
+    case SUPPORTS: {
+      // @... { ... }
+      const nextMeta = [...meta, element.value]
       const children = element.children as Element[]
 
-      return children.flatMap(child => analyzeStylisElement(child, nextMedia, selector))
+      return children.flatMap(child => analyzeStylisElement(child, nextMeta, selector))
     }
+    case COMMENT:
     default: {
       return []
     }

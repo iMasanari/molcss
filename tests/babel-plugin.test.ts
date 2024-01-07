@@ -112,6 +112,49 @@ describe('css tag', () => {
       "
     `)
   })
+
+  it('css @media and @supports', async () => {
+    const code = `
+      import { css } from "molcss";
+      
+      css\`
+        @media screen and (min-width: 900px) {
+          display: flex;
+        }
+      \`;
+
+      css\`
+        @supports (display: grid) {
+          display: grid;
+        }
+      \`;
+      
+      css\`
+        @supports (display: flex) {
+          @media screen and (min-width: 900px) {
+            display: flex;
+          }
+        }
+      \`;
+    `
+
+    const actual = await transformAsync(code, {
+      plugins: [[plugin, { devLabel: false }]],
+    })
+
+    expect(actual?.code).toMatchInlineSnapshot(`
+      ""i0";
+      "i1";
+      "i2";"
+    `)
+
+    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+      "@media screen and (min-width: 900px){.i0{display:flex}}
+      @supports (display: grid){.i1{display:grid}}
+      @supports (display: flex){@media screen and (min-width: 900px){.i2{display:flex}}}
+      "
+    `)
+  })
 })
 
 describe('devLabel option', () => {

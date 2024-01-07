@@ -37,7 +37,7 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
   }))
 
   const styleValueName = result.values.length
-    ? getOrCreate(stylePropData.values, result.values.map(v => `${v.media}{${v.value}`).join('\n'), (v) => v.size.toString())
+    ? getOrCreate(stylePropData.values, result.values.map(v => [...v.atRule, v.value].join('{')).join('\n'), (v) => v.size.toString())
     : '00' // ランタイムスタイルのキー取得用
 
   const styleSelectorName = result.selector !== '&\f'
@@ -89,7 +89,7 @@ const getStyle = (result: StyleData, className: string) => {
   const styles = result.values.map(v => {
     const style = `${selector}{${result.prop}:${v.value}}`
 
-    return v.media ? `${v.media}{${style}}` : style
+    return v.atRule.reduceRight((acc, v) => `${v}{${acc}}`, style)
   })
 
   return styles.join(' ')
