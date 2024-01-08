@@ -70,7 +70,8 @@
   "license": "MIT",
   "workspaces": [
     "website",
-    "examples/next-example"
+    "examples/next-example",
+    "examples/vite-react-example"
   ],
   "dependencies": {
     "@babel/core": "^7.23.7",
