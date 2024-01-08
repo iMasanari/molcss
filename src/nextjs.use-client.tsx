@@ -1,12 +1,16 @@
 // 'use client'
 // use clientはビルドで追加される
 
-import React, { ReactNode, createContext, useContext, useEffect, useInsertionEffect, useState } from 'react'
+import React, { ReactNode, createContext, useContext, useInsertionEffect } from 'react'
 import { CacheableRuntimeStyleData, insertStyle } from './lib/runtime'
 
-type SsrContext = Map<string, string>
+type ExtractStyleCache = Map<string, string>
 
-const CacheContext = createContext<SsrContext | null | undefined>(null)
+interface MolcssContext {
+  extractStyleCache?: ExtractStyleCache
+}
+
+const MolcssContext = createContext<MolcssContext | null | undefined>(null)
 
 const ssrScript = /* js */`
   (function(c){
@@ -15,31 +19,33 @@ const ssrScript = /* js */`
       c.parentNode.removeChild(c)
     )
   })(document.currentScript)
-`.replace(/\n\s*/g, '')
+`
 
-export interface SSRProviderProps {
-  extractCache?: Map<string, string>
+export interface MolcssProviderProps {
+  extractStyleCache?: ExtractStyleCache | undefined
   children: ReactNode
 }
 
-export const SSRProvider = ({ extractCache, children }: SSRProviderProps) => {
-  if (extractCache) {
-    return (
-      <CacheContext.Provider value={extractCache}>
-        {children}
-      </CacheContext.Provider>
-    )
-  } else {
-    return (
-      <>
-        {children}
-        {typeof document === 'undefined' && (
-          <script dangerouslySetInnerHTML={{ __html: ssrScript }} />
-        )}
-      </>
-    )
-  }
+export const MolcssProvider = ({ extractStyleCache, children }: MolcssProviderProps) => {
+  const context = { extractStyleCache }
+
+  return (
+    <MolcssContext.Provider value={context}>
+      {children}
+      {typeof document === 'undefined' && !extractStyleCache && (
+        <script dangerouslySetInnerHTML={{ __html: ssrScript.replace(/\n\s*/g, '') }} />
+      )}
+    </MolcssContext.Provider>
+  )
 }
+
+let ssrWarningDisplayed = false
+
+const ssrWarningMessage = `[molcss]: For SSR, \`MolcssProvider\` is required.
+
+ex.
+import { MolcssProvider } from 'molcss/react'
+App = () => <MolcssProvider>{/* your component */}</MolcssProvider>`
 
 interface MolcssStyleProps {
   styles: {
@@ -50,36 +56,38 @@ interface MolcssStyleProps {
   }
 }
 
-let shouldRenderSSRStyle: boolean | undefined
-
 export const MolcssStyle = ({ styles }: MolcssStyleProps) => {
-  // SSRの場合、またはSSR時のスタイルがbody内に残っている場合にtrue
-  if (shouldRenderSSRStyle == null) {
-    shouldRenderSSRStyle = typeof document === 'undefined' || document.body.querySelector('style[data-molcss]') != null
-  }
-
-  const extractCache = useContext(CacheContext)
-
-  const [isRenderStyle, setIsRenderStyle] = useState(shouldRenderSSRStyle)
-
-  useEffect(() => {
-    shouldRenderSSRStyle = false
-    setIsRenderStyle(false)
-  }, [])
+  const context = useContext(MolcssContext)
 
   useInsertionEffect(() => {
     styles.styleData.forEach(insertStyle)
   }, [styles.cssText])
 
-  if (typeof document === 'undefined' && extractCache) {
+  if (!styles.cssText) {
+    return null
+  }
+
+  // `<MolcssProvider />` がない場合
+  if (!context && ssrWarningMessage && (typeof document === 'undefined' || process.env.NODE_ENV !== 'production' && document.body.querySelector('style[data-molcss]'))) {
+    // 1度のみ警告
+    if (!ssrWarningDisplayed) {
+      console.warn(ssrWarningMessage)
+      ssrWarningDisplayed = true
+    }
+  }
+
+  // ブラウザの場合、表示しない
+  if (typeof document !== 'undefined') {
+    return null
+  }
+
+  if (context && context.extractStyleCache) {
+    const extractCache = context.extractStyleCache
+
     styles.styleData.forEach(v => {
       extractCache.set(v.className, `.${v.className}{${v.prop}:${v.value}}`)
     })
 
-    return null
-  }
-
-  if (!isRenderStyle || !styles.cssText) {
     return null
   }
 

@@ -2,9 +2,9 @@
 
 import { css } from 'molcss'
 import { renderToString } from 'react-dom/server'
-import { expect, test } from 'vitest'
-import { SSRProvider } from '../src/nextjs.use-client'
-import { createCache } from '../src/react'
+import { afterEach, expect, test, vi } from 'vitest'
+import { MolcssProvider } from '../src/nextjs.use-client'
+import { createExtractStyleCache } from '../src/react'
 import { extractCritical } from '../src/server'
 
 const fomat = (html: string) =>
@@ -19,8 +19,18 @@ const TestComponent = () =>
     <Component css={css`--ssr-test-color: ${'blue'};`} />
   </>
 
-test('SSR without SSRProvider', () => {
+const consoleWarnMock = vi.spyOn(console, 'warn')
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
+test('SSR without MolcssProvider', () => {
+  consoleWarnMock.mockImplementation(() => undefined)
+
   const actual = renderToString(<TestComponent />)
+
+  expect(consoleWarnMock).toHaveBeenCalledTimes(1)
 
   expect(fomat(actual)).toMatchInlineSnapshot(`
     "<div class="DEV-ssrTest-css bL0"></div>
@@ -30,12 +40,14 @@ test('SSR without SSRProvider', () => {
   `)
 })
 
-test('SSR with SSRProvider', () => {
+test('SSR with MolcssProvider', () => {
   const actual = renderToString(
-    <SSRProvider>
+    <MolcssProvider>
       <TestComponent />
-    </SSRProvider>
+    </MolcssProvider>
   )
+
+  expect(consoleWarnMock).toHaveBeenCalledTimes(0)
 
   expect(fomat(actual)).toMatchInlineSnapshot(`
     "<div class="DEV-ssrTest-css bL0"></div>
@@ -46,16 +58,18 @@ test('SSR with SSRProvider', () => {
   `)
 })
 
-test('SSR with SSRProvider extract', () => {
-  const cache = createCache()
+test('SSR with MolcssProvider extract', () => {
+  const cache = createExtractStyleCache()
 
   const element = (
-    <SSRProvider extractCache={cache}>
+    <MolcssProvider extractStyleCache={cache}>
       <TestComponent />
-    </SSRProvider>
+    </MolcssProvider>
   )
 
   const actual = extractCritical(renderToString(element), cache)
+
+  expect(consoleWarnMock).toHaveBeenCalledTimes(0)
 
   expect(fomat(actual.html)).toMatchInlineSnapshot(`
     "<div class="DEV-ssrTest-css bL0"></div>

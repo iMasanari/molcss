@@ -1,3 +1,3 @@
-export { SSRProvider, type SSRProviderProps } from './nextjs.use-client'
+export { MolcssProvider, type MolcssProviderProps } from './nextjs.use-client'
 
-export const createCache = () => new Map<string, string>()
+export const createExtractStyleCache = () => new Map<string, string>()

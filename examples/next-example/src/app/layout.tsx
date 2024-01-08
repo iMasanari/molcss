@@ -2,6 +2,7 @@ import './globals.css'
 import 'molcss/style.css'
 
 import { css } from 'molcss'
+import { MolcssProvider } from 'molcss/react'
 import type { Metadata } from 'next'
 
 // NOTE: When using babel, next/font cannot be used.
@@ -26,7 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={bodyStyle}>{children}</body>
+      <body className={bodyStyle}>
+        <MolcssProvider>
+          {children}
+        </MolcssProvider>
+      </body>
     </html>
   )
 }
