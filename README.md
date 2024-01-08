@@ -194,10 +194,14 @@ const molcssContext = require('./molcss.context')
 
 module.exports = {
   presets: [
-    'next/babel',
+    ['next/babel', {
+      'preset-react': {
+        runtime: 'automatic',
+        importSource: 'molcss/react',
+      },
+    }],
   ],
   plugins: [
-    // molcss settings
     ['molcss/babel-plugin', {
       context: molcssContext,
     }],
