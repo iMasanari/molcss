@@ -4,6 +4,7 @@ import Link from 'next/link'
 const headerStyle = css`
   position: sticky;
   top: 0;
+  z-index: 1;
   padding: 0 24px;
   background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(4px);
