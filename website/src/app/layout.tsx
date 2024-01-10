@@ -14,7 +14,7 @@ const bodyStyle = css`
 `
 
 export const metadata: Metadata = {
-  title: 'molcss',
+  title: 'Molcss',
   description: 'A simple, lightweight, and powerful CSS-in-JS library.',
 }
 

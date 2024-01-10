@@ -1,4 +1,4 @@
-# MolCSS
+# Molcss
 
 A simple, lightweight, and powerful CSS-in-JS library.
 

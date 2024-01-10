@@ -28,7 +28,7 @@ export default function Hero() {
   return (
     <div className={heroStyle}>
       <div className={titleWrapperStyle}>
-        <h1 className={titleStyle}>molcss</h1>
+        <h1 className={titleStyle}>Molcss</h1>
         <p className={descriptionStyle}>A simple, lightweight, and powerful CSS-in-JS library.</p>
       </div>
       <Button as="a" className={getStartedButtonStyle} href="https://github.com/iMasanari/molcss#readme" target="_blank" rel="noopener">
