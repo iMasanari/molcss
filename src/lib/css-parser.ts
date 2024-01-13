@@ -1,4 +1,4 @@
-import { COMMENT, compile, DECLARATION, Element, MEDIA, RULESET, SUPPORTS, LAYER } from 'stylis'
+import { COMMENT, DECLARATION, Element, MEDIA, RULESET, SUPPORTS, compile } from 'stylis'
 
 export interface StyleData {
   selector: string
