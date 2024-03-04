@@ -6,8 +6,7 @@ import { render, screen } from '@testing-library/react'
 import { css } from 'molcss'
 import { expect, test } from 'vitest'
 
-// NOTE: postcss化の際にテスト不可に
-test.todo('use in react', () => {
+test('use in react', () => {
   const molcssStyle = css`
     width: 100px;
   `
@@ -21,8 +20,7 @@ test.todo('use in react', () => {
   })
 })
 
-// NOTE: postcss化の際にテスト不可に
-test.todo('css prop', () => {
+test('css prop', () => {
   const molcssStyle = (value: number) => css`
     padding: ${value}px;
   `
@@ -36,8 +34,7 @@ test.todo('css prop', () => {
   })
 })
 
-// NOTE: postcss化の際にテスト不可に
-test.todo('css prop with component', () => {
+test('css prop with component', () => {
   const molcssStyle = (value: number) => css`
     margin: ${value}px;
   `
@@ -54,8 +51,7 @@ test.todo('css prop with component', () => {
   })
 })
 
-// NOTE: postcss化の際にテスト不可に
-test.todo('css prop with nest component', () => {
+test('css prop with nest component', () => {
   const molcssStyle = (value: number) => css`
     margin: ${value}px;
   `
@@ -76,8 +72,7 @@ test.todo('css prop with nest component', () => {
   })
 })
 
-// NOTE: postcss化の際にテスト不可に
-test.todo('css prop with nest className', () => {
+test('css prop with nest className', () => {
   const molcssStyle = (value: number) => css`
     margin: ${value}px;
   `
