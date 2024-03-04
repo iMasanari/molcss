@@ -35,8 +35,8 @@ test('SSR without MolcssProvider', () => {
   expect(fomat(actual)).toMatchInlineSnapshot(`
     "<div class="DEV-ssrTest-css bL0"></div>
     <div class="DEV-ssrTest-css bL1 bM00" style="--molcss-bM:green"></div>
-    <style data-molcss="bM2401959520">.bM2401959520{--molcss-bM:blue}</style>
-    <div class="DEV-ssrTest-css bL1 bM2401959520"></div>"
+    <style data-molcss="bM2087430971">.bM2087430971{--molcss-bM:blue}</style>
+    <div class="DEV-ssrTest-css bL1 bM2087430971"></div>"
   `)
 })
 
@@ -52,8 +52,8 @@ test('SSR with MolcssProvider', () => {
   expect(fomat(actual)).toMatchInlineSnapshot(`
     "<div class="DEV-ssrTest-css bL0"></div>
     <div class="DEV-ssrTest-css bL1 bM00" style="--molcss-bM:green"></div>
-    <style data-molcss="bM2401959520">.bM2401959520{--molcss-bM:blue}</style>
-    <div class="DEV-ssrTest-css bL1 bM2401959520"></div>
+    <style data-molcss="bM2087430971">.bM2087430971{--molcss-bM:blue}</style>
+    <div class="DEV-ssrTest-css bL1 bM2087430971"></div>
     <script>(function(c){c&&(c.parentNode.querySelectorAll('style[data-molcss]').forEach(function(v){document.head.appendChild(v)}),c.parentNode.removeChild(c))})(document.currentScript)</script>"
   `)
 })
@@ -74,12 +74,12 @@ test('SSR with MolcssProvider extract', () => {
   expect(fomat(actual.html)).toMatchInlineSnapshot(`
     "<div class="DEV-ssrTest-css bL0"></div>
     <div class="DEV-ssrTest-css bL1 bM00" style="--molcss-bM:green"></div>
-    <div class="DEV-ssrTest-css bL1 bM2401959520"></div>"
+    <div class="DEV-ssrTest-css bL1 bM2087430971"></div>"
   `)
   expect(actual.ids).toMatchInlineSnapshot(`
     [
-      "bM2401959520",
+      "bM2087430971",
     ]
   `)
-  expect(actual.css).toMatchInlineSnapshot(`".bM2401959520{--molcss-bM:blue}"`)
+  expect(actual.css).toMatchInlineSnapshot(`".bM2087430971{--molcss-bM:blue}"`)
 })
