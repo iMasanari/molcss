@@ -70,8 +70,7 @@
   "license": "MIT",
   "workspaces": [
     "website",
-    "examples/next-example",
-    "examples/vite-react-example"
+    "examples/*"
   ],
   "dependencies": {
     "fast-glob": "^3.3.2",
