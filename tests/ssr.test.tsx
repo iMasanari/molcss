@@ -33,10 +33,10 @@ test('SSR without MolcssProvider', () => {
   expect(consoleWarnMock).toHaveBeenCalledTimes(1)
 
   expect(fomat(actual)).toMatchInlineSnapshot(`
-    "<div class="DEV-ssrTest-css bL0"></div>
-    <div class="DEV-ssrTest-css bL1 bM00" style="--molcss-bM:green"></div>
+    "<div class="__DEV-ssrTest-css__ bL0"></div>
+    <div class="__DEV-ssrTest-css__ bL1 bM00" style="--molcss-bM:green"></div>
     <style data-molcss="bM2087430971">.bM2087430971{--molcss-bM:blue}</style>
-    <div class="DEV-ssrTest-css bL1 bM2087430971"></div>"
+    <div class="__DEV-ssrTest-css__ bL1 bM2087430971"></div>"
   `)
 })
 
@@ -50,10 +50,10 @@ test('SSR with MolcssProvider', () => {
   expect(consoleWarnMock).toHaveBeenCalledTimes(0)
 
   expect(fomat(actual)).toMatchInlineSnapshot(`
-    "<div class="DEV-ssrTest-css bL0"></div>
-    <div class="DEV-ssrTest-css bL1 bM00" style="--molcss-bM:green"></div>
+    "<div class="__DEV-ssrTest-css__ bL0"></div>
+    <div class="__DEV-ssrTest-css__ bL1 bM00" style="--molcss-bM:green"></div>
     <style data-molcss="bM2087430971">.bM2087430971{--molcss-bM:blue}</style>
-    <div class="DEV-ssrTest-css bL1 bM2087430971"></div>
+    <div class="__DEV-ssrTest-css__ bL1 bM2087430971"></div>
     <script>(function(c){c&&(c.parentNode.querySelectorAll('style[data-molcss]').forEach(function(v){document.head.appendChild(v)}),c.parentNode.removeChild(c))})(document.currentScript)</script>"
   `)
 })
@@ -72,9 +72,9 @@ test('SSR with MolcssProvider extract', () => {
   expect(consoleWarnMock).toHaveBeenCalledTimes(0)
 
   expect(fomat(actual.html)).toMatchInlineSnapshot(`
-    "<div class="DEV-ssrTest-css bL0"></div>
-    <div class="DEV-ssrTest-css bL1 bM00" style="--molcss-bM:green"></div>
-    <div class="DEV-ssrTest-css bL1 bM2087430971"></div>"
+    "<div class="__DEV-ssrTest-css__ bL0"></div>
+    <div class="__DEV-ssrTest-css__ bL1 bM00" style="--molcss-bM:green"></div>
+    <div class="__DEV-ssrTest-css__ bL1 bM2087430971"></div>"
   `)
   expect(actual.ids).toMatchInlineSnapshot(`
     [
