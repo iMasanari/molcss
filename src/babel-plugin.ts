@@ -132,7 +132,7 @@ const molcssBabelPlugin = ({ types: t }: PluginOptions, options: MolcssOptions):
           const fileName = getFileBaseName(state.filename || 'ANONYMOUS')
           const localName = getLocalName(target) || 'ANONYMOUS'
 
-          const className = mergeStyle(devLabel && `DEV-${fileName}-${localName}`, ...classNames)
+          const className = mergeStyle(devLabel && `__DEV-${fileName}-${localName}__`, ...classNames)
 
           if (result.runtimeStyles.length) {
             const node = t.objectExpression([

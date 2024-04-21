@@ -172,7 +172,7 @@ describe('devLabel option', () => {
       plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`"const identifierStyle = "DEV-devLabelOptionIdentifier-identifierStyle c0";"`)
+    expect(actual?.code).toMatchInlineSnapshot(`"const identifierStyle = "__DEV-devLabelOptionIdentifier-identifierStyle__ c0";"`)
 
     expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
       ".c0{color:red}
@@ -201,8 +201,8 @@ describe('devLabel option', () => {
 
     expect(actual?.code).toMatchInlineSnapshot(`
       "const objectStyle = {
-        identifierStyle: "DEV-devLabelOptionObject-identifierStyle c0",
-        'literalStyle': "DEV-devLabelOptionObject-literalStyle c1"
+        identifierStyle: "__DEV-devLabelOptionObject-identifierStyle__ c0",
+        'literalStyle': "__DEV-devLabelOptionObject-literalStyle__ c1"
       };"
     `)
 
@@ -243,13 +243,13 @@ describe('devLabel option', () => {
 
     expect(actual?.code).toMatchInlineSnapshot(`
       "function functionDeclaration() {
-        "DEV-devLabelOptionFunction-functionDeclaration c0";
+        "__DEV-devLabelOptionFunction-functionDeclaration__ c0";
       }
       const _ = function functionExpression() {
-        "DEV-devLabelOptionFunction-functionExpression c1";
+        "__DEV-devLabelOptionFunction-functionExpression__ c1";
       };
       const variableDeclaration = function () {
-        "DEV-devLabelOptionFunction-variableDeclaration c2";
+        "__DEV-devLabelOptionFunction-variableDeclaration__ c2";
       };"
     `)
 
@@ -298,17 +298,17 @@ describe('devLabel option', () => {
     expect(actual?.code).toMatchInlineSnapshot(`
       "class ClassDeclaration {
         render() {
-          "DEV-devLabelOptionClass-ClassDeclaration c0";
+          "__DEV-devLabelOptionClass-ClassDeclaration__ c0";
         }
       }
       const _ = class ClassExpression {
         render() {
-          "DEV-devLabelOptionClass-ClassExpression c1";
+          "__DEV-devLabelOptionClass-ClassExpression__ c1";
         }
       };
       const VariableDeclaration = class {
         render() {
-          "DEV-devLabelOptionClass-VariableDeclaration c2";
+          "__DEV-devLabelOptionClass-VariableDeclaration__ c2";
         }
       };"
     `)

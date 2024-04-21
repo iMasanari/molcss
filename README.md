@@ -173,7 +173,7 @@ module.exports = {
 
 ```sh
 npm install molcss
-npm install postcss-flexbugs-fixes postcss-preset-env
+npm install babel-loader postcss-flexbugs-fixes postcss-preset-env
 ```
 
 ```js
@@ -189,23 +189,26 @@ module.exports = createContext()
 ```
 
 ```js
-// babel.config.js
+// next.config.js
 const molcssContext = require('./molcss.context')
 
 module.exports = {
-  presets: [
-    ['next/babel', {
-      'preset-react': {
-        runtime: 'automatic',
-        importSource: 'molcss/react',
+  webpack(config) {
+    config.module.rules.unshift({
+      test: /\.(jsx?|tsx?)$/i,
+      exclude: /node_modules/,
+      loader: 'babel-loader',
+      options: {
+        plugins: [
+          ['molcss/babel-plugin', {
+            context: molcssContext,
+          }],
+        ],
       },
-    }],
-  ],
-  plugins: [
-    ['molcss/babel-plugin', {
-      context: molcssContext,
-    }],
-  ],
+    })
+
+    return config
+  },
 }
 ```
 
@@ -240,7 +243,23 @@ module.exports = {
 ```
 
 ```js
-// tsconfig.json
+// package.json
+// Change the browserslist settings so that only Molcss converts Tagged templates.
+// - safari 12 -> 13
+// https://nextjs.org/docs/architecture/supported-browsers
+{
+  "browserslist": [
+    "chrome 64",
+    "edge 79",
+    "firefox 67",
+    "opera 51",
+    "safari 13"
+  ]
+}
+```
+
+```js
+// tsconfig.json (or jsconfig.json)
 {
   "compilerOptions": {
     "jsxImportSource": "molcss/react",

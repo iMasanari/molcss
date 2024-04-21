@@ -1,7 +1,5 @@
 import { hash } from '../utils/hash'
 
-const hashSeed = 0x0000
-
 const ssrStyleCache = /* @__PURE__ */ new Set<string>(
   typeof document !== 'undefined'
     ? Array.from(document.head.querySelectorAll<HTMLElement>('style[data-molcss]')).flatMap(v => {
@@ -67,7 +65,7 @@ export const generateRuntimeStyle = (
   }
 
   value = '' + value
-  const className = prop + hash(value, hashSeed)
+  const className = prop + hash(value)
 
   insertStyle({ cacheKey, className, prop: `--molcss-${prop}`, value })
 
