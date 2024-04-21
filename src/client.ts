@@ -13,8 +13,13 @@ interface CssTagFunction {
   (template: TemplateStringsArray, ...substitutions: (string | number | bigint)[]): RuntimeStyle
 }
 
+const cssErrorMessage = `[molcss]: Using the "css" tag in runtime is not supported.
+
+- Make sure you have set up the Babel plugin correctly.
+- Check if other plugins convert Tagged templates before Molcss.`
+
 export const css: CssTagFunction = () => {
-  throw new Error('[molcss]: Using the "css" tag in runtime is not supported. Make sure you have set up the Vite plugin or webpack plugin correctly.')
+  throw new Error(cssErrorMessage)
 }
 
 const getPropertyData = (str: string) => {
