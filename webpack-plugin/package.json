@@ -1,5 +1,0 @@
-{
-  "main": "../dist/webpack/webpack-plugin.js",
-  "module": "../dist/webpack/webpack-plugin.mjs",
-  "types": "../dist/webpack/webpack-plugin.d.ts"
-}

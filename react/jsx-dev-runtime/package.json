@@ -1,5 +1,0 @@
-{
-  "main": "../../dist/react/jsx-dev-runtime.js",
-  "module": "../../dist/react/jsx-dev-runtime.mjs",
-  "types": "../../dist/react/jsx-dev-runtime.d.ts"
-}

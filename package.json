@@ -41,9 +41,14 @@
       "require": "./dist/babel-plugin.js"
     },
     "./postcss-plugin": {
-      "types": "./postcss-plugin/index.d.ts",
-      "import": "./dist/postcss-plugin.mjs",
-      "require": "./postcss-plugin/index.js"
+      "import": {
+        "types": "./dist/postcss-plugin.d.ts",
+        "default": "./dist/postcss-plugin.mjs"
+      },
+      "require": {
+        "types": "./cjs-wrapper/postcss-plugin.d.ts",
+        "default": "./cjs-wrapper/postcss-plugin.cjs"
+      }
     },
     "./webpack-plugin": {
       "types": "./dist/webpack/webpack-plugin.d.ts",
@@ -51,14 +56,24 @@
       "require": "./dist/webpack/webpack-plugin.js"
     },
     "./webpack-script-loader": {
-      "types": "./webpack-script-loader/index.d.ts",
-      "import": "./dist/webpack/webpack-script-loader.mjs",
-      "require": "./webpack-script-loader/index.cjs"
+      "import": {
+        "types": "./dist/webpack/webpack-script-loader.d.ts",
+        "default": "./dist/webpack/webpack-script-loader.mjs"
+      },
+      "require": {
+        "types": "./cjs-wrapper/webpack-script-loader.d.ts",
+        "default": "./cjs-wrapper/webpack-script-loader.cjs"
+      }
     },
     "./webpack-style-loader": {
-      "types": "./webpack-style-loader/index.d.ts",
-      "import": "./dist/webpack/webpack-style-loader.mjs",
-      "require": "./webpack-style-loader/index.cjs"
+      "import": {
+        "types": "./dist/webpack/webpack-style-loader.d.ts",
+        "default": "./dist/webpack/webpack-style-loader.mjs"
+      },
+      "require": {
+        "types": "./cjs-wrapper/webpack-style-loader.d.ts",
+        "default": "./cjs-wrapper/webpack-style-loader.cjs"
+      }
     },
     "./nextjs-plugin": {
       "types": "./dist/nextjs/nextjs-plugin.d.ts",
@@ -74,12 +89,8 @@
     "./package.json": "./package.json"
   },
   "files": [
+    "cjs-wrapper",
     "dist",
-    "react",
-    "server",
-    "context",
-    "babel-plugin",
-    "postcss-plugin",
     "style.css"
   ],
   "scripts": {
