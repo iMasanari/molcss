@@ -65,6 +65,11 @@
       "import": "./dist/nextjs/nextjs-plugin.mjs",
       "require": "./dist/nextjs/nextjs-plugin.js"
     },
+    "./vite-plugin": {
+      "types": "./dist/vite/vite-plugin.d.ts",
+      "import": "./dist/vite/vite-plugin.mjs",
+      "require": "./dist/vite/vite-plugin.js"
+    },
     "./style.css": "./style.css",
     "./package.json": "./package.json"
   },

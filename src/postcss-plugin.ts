@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { glob } from 'fast-glob'
+import fastGlob from 'fast-glob'
 import { type Plugin } from 'postcss'
 import { StyleData } from './lib/css-parser'
 import { extract } from './lib/extractor'
@@ -31,7 +31,7 @@ const molcssPostcssPlugin = (options: Options): Plugin => {
           return
         }
 
-        const paths = await glob(content)
+        const paths = await fastGlob.glob(content)
 
         const files = await Promise.all(
           paths.map((path) => readFile(path, 'utf-8'))
