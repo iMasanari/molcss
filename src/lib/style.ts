@@ -37,19 +37,19 @@ export const createClassName = (result: StyleData, context: StyleContext) => {
   }))
 
   const styleValueName = result.values.length
-    ? getOrCreate(stylePropData.values, result.values.map(v => [...v.atRule, v.value].join('{')).join('\n'), (v) => v.size.toString())
+    ? getOrCreate(stylePropData.values, result.values.map(v => [...v.atRule, , v.selector, v.value].join('{')).join('\n'), (v) => v.size.toString())
     : '00' // ランタイムスタイルのキー取得用
 
-  const styleSelectorName = result.selector !== '&\f'
-    ? getOrCreate(stylePropData.meta, result.selector, (v) => convertToAlphabet(v.size))
-    : ''
+  const styleSelectorName = result.group.startsWith('{')
+    ? ''
+    : getOrCreate(stylePropData.meta, result.group, (v) => convertToAlphabet(v.size))
 
   return stylePropData.name + styleValueName + styleSelectorName
 }
 
 export const createRuntimeKey = (styleData: StyleData, index: number, styleContext: StyleContext) => {
   const token = createClassName({ ...styleData, values: [] }, styleContext)
-  const className = createClassName({ prop: `--molcss-runtime-key-${token}-${index}`, values: [], selector: '&\f' }, styleContext)
+  const className = createClassName({ prop: `--molcss-runtime-key-${token}-${index}`, values: [], group: '{' }, styleContext)
 
   return className.replace(/\d+$/, '')
 }
@@ -80,14 +80,12 @@ const sortFn = ([, a]: [unknown, StyleData], [, b]: [unknown, StyleData]) => {
     return a.prop < b.prop ? -1 : 1
   }
 
-  return a.selector > b.selector ? -1 : 1
+  return a.group > b.group ? -1 : 1
 }
 
 const getStyle = (result: StyleData, className: string) => {
-  const selector = result.selector.replace(/&\f?/g, `.${className}`)
-
   const styles = result.values.map(v => {
-    const style = `${selector}{${result.prop}:${v.value}}`
+    const style = `${v.selector.replace(/&\f?/g, `.${className}`)}{${result.prop}:${v.value}}`
 
     return v.atRule.reduceRight((acc, v) => `${v}{${acc}}`, style)
   })

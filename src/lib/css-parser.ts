@@ -1,9 +1,44 @@
+import { AstEntity, AstRule, createParser } from 'css-selector-parser'
 import { COMMENT, DECLARATION, Element, MEDIA, RULESET, SUPPORTS, compile } from 'stylis'
 
+const NESTING_SELECTOR = '__MOLCSS_NESTING_SELECTOR__'
+
+const selectorParser = createParser()
+
+const hasNestedSelector = (v: AstEntity) => v.type === 'TagName' && v.name === NESTING_SELECTOR
+const hasPseudoElement = (v: AstEntity) => v.type === 'PseudoElement'
+
+const isSelfSelector = (selector: string) => {
+  const ast = selectorParser(selector.replace(/&\f/g, NESTING_SELECTOR))
+
+  // 複数セレクタの場合、暫定的にfalse（実装めんどい）
+  if (ast.rules.length !== 1) {
+    return false
+  }
+
+  const rules: AstRule[] = []
+  let target = ast.rules[0]
+
+  while (target) {
+    rules.push(target)
+    target = target.nestedRule
+  }
+
+  const lastRule = rules[rules.length - 1]!
+
+  // 最後に & が含まれている場合、疑似要素がなければ自分自身
+  if (lastRule.items.some(hasNestedSelector)) {
+    return !lastRule.items.some(hasPseudoElement)
+  }
+
+  // 全てに & がない場合、自分自身
+  return !rules.some(v => v.items.some(hasNestedSelector))
+}
+
 export interface StyleData {
-  selector: string
+  group: string
   prop: string
-  values: { value: string, atRule: string[] }[]
+  values: { selector: string, value: string, atRule: string[] }[]
 }
 
 export const parse = (style: string): StyleData[] => {
@@ -12,12 +47,12 @@ export const parse = (style: string): StyleData[] => {
 
   return [...new Set(analyzed.map(v => v.group))].map(group => {
     const list = analyzed.filter(v => v.group === group)
-    const { selector, prop } = list[0]!
+    const { prop } = list[0]!
 
     return {
-      selector,
+      group,
       prop,
-      values: list.map(({ value, atRule }) => ({ value, atRule })),
+      values: list.map(({ selector, value, atRule }) => ({ selector, value, atRule })),
     }
   })
 }
@@ -36,9 +71,11 @@ const analyzeStylisElement = (element: Element, meta: string[], selector: string
       // prop: value;
       const prop = element.props as string
       const value = element.children as string
-      const group = `${selector || '&\f'}{${prop}`
+      selector = selector || '&\f'
 
-      return [{ group, atRule: meta, selector: selector || '&\f', prop, value }]
+      const group = `${isSelfSelector(selector) ? '' : selector}{${prop}`
+
+      return [{ group, atRule: meta, selector, prop, value }]
     }
     case RULESET: {
       // selector { ... }

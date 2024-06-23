@@ -17,5 +17,5 @@ test('postcss-plugin', async () => {
     from: 'tests/postcss-plugin.test.css',
   })
 
-  expect(result.css).toMatchInlineSnapshot(`".a0{padding:4px}.c1a:hover{color:blue}.c0{color:red}"`)
+  expect(result.css).toMatchInlineSnapshot(`".a0{padding:4px}.c0{color:red}.c1:hover{color:blue}"`)
 })

@@ -68,6 +68,15 @@ describe('css tag', () => {
       css\`
         height: 100vh;
         height: 100dvh;
+        &:hover {
+          height: 1px;
+        }
+        &[data-hover] {
+          height: 2px;
+        }
+        & span {
+          height: 1%;
+        }
       \`;
     `
 
@@ -75,10 +84,11 @@ describe('css tag', () => {
       plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`""g0";"`)
+    expect(actual?.code).toMatchInlineSnapshot(`""g0 g1a";"`)
 
     expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".g0{height:100vh} .g0{height:100dvh}
+      ".g0{height:100vh} .g0{height:100dvh} .g0:hover{height:1px} .g0[data-hover]{height:2px}
+      .g1a span{height:1%}
       "
     `)
   })
@@ -359,15 +369,74 @@ describe('createStyle', () => {
     })
 
     expect(actual?.code).toMatchInlineSnapshot(`
-      ""a0 a1a";
-      "a2 a3a";"
+      ""a0";
+      "a1";"
     `)
     expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".a1a:hover{padding:10px 2px}
-      .a3a:hover{padding:20px 2px}
-      .a0{padding:10px 1px} @media screen and (min-width: 300px){.a0{padding:10px 3px}} @media screen and (min-width: 600px){.a0{padding:10px 4px}}
-      .a2{padding:20px 1px} @media screen and (max-width: 600px){.a2{padding:20px 3px}} @media screen and (max-width: 300px){.a2{padding:20px 4px}}
+      ".a0{padding:10px 1px} .a0:hover{padding:10px 2px} @media screen and (min-width: 300px){.a0{padding:10px 3px}} @media screen and (min-width: 600px){.a0{padding:10px 4px}}
+      .a1{padding:20px 1px} .a1:hover{padding:20px 2px} @media screen and (max-width: 600px){.a1{padding:20px 3px}} @media screen and (max-width: 300px){.a1{padding:20px 4px}}
       "
     `)
   })
+})
+
+it('css`...`', async () => {
+  const code = `
+    import { css } from "molcss";
+    
+    css\`
+      color: red;
+    \`;
+
+    css\`
+      &:hover {
+        color: red;
+      }
+    \`;
+
+    css\`
+      &::after {
+        color: red;
+      }
+    \`;
+
+    css\`
+      & div {
+        color: red;
+      }
+    \`;
+
+    css\`
+      color: red;
+      &:hover {
+        color: red;
+      }
+      &::after {
+        color: red;
+      }
+      & div {
+        color: red;
+      }
+    \`;
+  `
+
+  const actual = await transformAsync(code, {
+    plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+  })
+
+  expect(actual?.code).toMatchInlineSnapshot(`
+    ""c0";
+    "c1";
+    "c2a";
+    "c3b";
+    "c4 c2a c3b";"
+  `)
+  expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
+    ".c0{color:red}
+    .c1:hover{color:red}
+    .c4{color:red} .c4:hover{color:red}
+    .c2a::after{color:red}
+    .c3b div{color:red}
+    "
+  `)
 })
