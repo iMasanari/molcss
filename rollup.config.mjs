@@ -21,6 +21,8 @@ const serverInputs = {
   'webpack/webpack-plugin': './src/webpack-plugin.ts',
   'webpack/webpack-script-loader': './src/webpack-script-loader.ts',
   'webpack/webpack-style-loader': './src/webpack-style-loader.ts',
+  'nextjs/nextjs-plugin': './src/nextjs-plugin.ts',
+  'vite/vite-plugin': './src/vite-plugin.ts',
 }
 
 const config = defineConfig({

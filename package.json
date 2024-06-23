@@ -60,6 +60,11 @@
       "import": "./dist/webpack/webpack-style-loader.mjs",
       "require": "./webpack-style-loader/index.cjs"
     },
+    "./nextjs-plugin": {
+      "types": "./dist/nextjs/nextjs-plugin.d.ts",
+      "import": "./dist/nextjs/nextjs-plugin.mjs",
+      "require": "./dist/nextjs/nextjs-plugin.js"
+    },
     "./style.css": "./style.css",
     "./package.json": "./package.json"
   },

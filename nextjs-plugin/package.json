@@ -1,0 +1,5 @@
+{
+  "main": "../dist/nextjs-plugin.js",
+  "module": "../dist/nextjs-plugin.mjs",
+  "types": "../dist/nextjs-plugin.d.ts"
+}
