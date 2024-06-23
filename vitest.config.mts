@@ -1,11 +1,6 @@
-import { createRequire } from 'node:module'
-import { babel } from '@rollup/plugin-babel'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import molcssBabelPlugin from './src/babel-plugin'
-
-const require = createRequire(import.meta.url)
-const { molcssContext } = require('./tests/postcss-helper.cjs')
+import molcss from './src/vite-plugin'
 
 export default defineConfig({
   resolve: {
@@ -20,14 +15,8 @@ export default defineConfig({
     react({
       jsxImportSource: 'molcss/react',
     }),
-    babel({
-      extensions: ['.js', '.jsx', '.ts', 'tsx'],
-      babelHelpers: 'bundled',
-      plugins: [
-        [molcssBabelPlugin, {
-          context: molcssContext,
-        }],
-      ],
+    molcss({
+      content: 'tests/**/*.{js,jsx,ts,tsx}',
     }),
   ],
   test: {
