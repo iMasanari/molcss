@@ -1,10 +1,16 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import MolcssPlugin from 'molcss/webpack-plugin'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * @type {import('webpack').Configuration}
  */
-module.exports = {
+export default {
   cache: false,
   entry: './src/index.tsx',
   output: {
@@ -30,14 +36,6 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                config: `${__dirname}/postcss.config.js`,
-              },
-            },
-          },
         ],
       },
       {
@@ -47,6 +45,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new MolcssPlugin({
+      content: 'src/**/*.{js,jsx,ts,tsx}',
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
