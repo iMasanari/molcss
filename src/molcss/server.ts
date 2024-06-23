@@ -1,4 +1,4 @@
-import { escapeRegExp } from './utils/regExp'
+import { escapeRegExp } from '../utils/regExp'
 
 export const extractCritical = (html: string, cache: Map<string, string>) => {
   if (!cache.size) {

@@ -2,13 +2,18 @@
   "name": "molcss",
   "version": "0.1.1",
   "description": "A simple, lightweight, and powerful CSS-in-JS library.",
-  "main": "./dist/molcss.js",
-  "module": "./dist/molcss.mjs",
+  "main": "./dist/molcss/molcss.js",
+  "module": "./dist/molcss/molcss.mjs",
   "exports": {
     ".": {
-      "types": "./dist/molcss.d.ts",
-      "import": "./dist/molcss.mjs",
-      "require": "./dist/molcss.js"
+      "types": "./dist/molcss/molcss.d.ts",
+      "import": "./dist/molcss/molcss.mjs",
+      "require": "./dist/molcss/molcss.js"
+    },
+    "./server": {
+      "types": "./dist/molcss/server.d.ts",
+      "import": "./dist/molcss/server.mjs",
+      "require": "./dist/molcss/server.js"
     },
     "./react": {
       "types": "./dist/react/react.d.ts",
@@ -25,25 +30,20 @@
       "import": "./dist/react/jsx-dev-runtime.mjs",
       "require": "./dist/react/jsx-dev-runtime.js"
     },
-    "./server": {
-      "types": "./dist/server.d.ts",
-      "import": "./dist/server.mjs",
-      "require": "./dist/server.js"
-    },
     "./context": {
-      "types": "./dist/context.d.ts",
-      "import": "./dist/context.mjs",
-      "require": "./dist/context.js"
+      "types": "./dist/compiler/context.d.ts",
+      "import": "./dist/compiler/context.mjs",
+      "require": "./dist/compiler/context.js"
     },
     "./babel-plugin": {
-      "types": "./dist/babel-plugin.d.ts",
-      "import": "./dist/babel-plugin.mjs",
-      "require": "./dist/babel-plugin.js"
+      "types": "./dist/compiler/babel-plugin.d.ts",
+      "import": "./dist/compiler/babel-plugin.mjs",
+      "require": "./dist/compiler/babel-plugin.js"
     },
     "./postcss-plugin": {
       "import": {
-        "types": "./dist/postcss-plugin.d.ts",
-        "default": "./dist/postcss-plugin.mjs"
+        "types": "./dist/compiler/postcss-plugin.d.ts",
+        "default": "./dist/compiler/postcss-plugin.mjs"
       },
       "require": {
         "types": "./cjs-wrapper/postcss-plugin.d.ts",
@@ -51,14 +51,14 @@
       }
     },
     "./webpack-plugin": {
-      "types": "./dist/webpack/webpack-plugin.d.ts",
-      "import": "./dist/webpack/webpack-plugin.mjs",
-      "require": "./dist/webpack/webpack-plugin.js"
+      "types": "./dist/bundler/webpack-plugin.d.ts",
+      "import": "./dist/bundler/webpack-plugin.mjs",
+      "require": "./dist/bundler/webpack-plugin.js"
     },
     "./webpack-script-loader": {
       "import": {
-        "types": "./dist/webpack/webpack-script-loader.d.ts",
-        "default": "./dist/webpack/webpack-script-loader.mjs"
+        "types": "./dist/bundler/webpack-script-loader.d.ts",
+        "default": "./dist/bundler/webpack-script-loader.mjs"
       },
       "require": {
         "types": "./cjs-wrapper/webpack-script-loader.d.ts",
@@ -67,8 +67,8 @@
     },
     "./webpack-style-loader": {
       "import": {
-        "types": "./dist/webpack/webpack-style-loader.d.ts",
-        "default": "./dist/webpack/webpack-style-loader.mjs"
+        "types": "./dist/bundler/webpack-style-loader.d.ts",
+        "default": "./dist/bundler/webpack-style-loader.mjs"
       },
       "require": {
         "types": "./cjs-wrapper/webpack-style-loader.d.ts",
@@ -76,14 +76,14 @@
       }
     },
     "./nextjs-plugin": {
-      "types": "./dist/nextjs/nextjs-plugin.d.ts",
-      "import": "./dist/nextjs/nextjs-plugin.mjs",
-      "require": "./dist/nextjs/nextjs-plugin.js"
+      "types": "./dist/bundler/nextjs-plugin.d.ts",
+      "import": "./dist/bundler/nextjs-plugin.mjs",
+      "require": "./dist/bundler/nextjs-plugin.js"
     },
     "./vite-plugin": {
-      "types": "./dist/vite/vite-plugin.d.ts",
-      "import": "./dist/vite/vite-plugin.mjs",
-      "require": "./dist/vite/vite-plugin.js"
+      "types": "./dist/bundler/vite-plugin.d.ts",
+      "import": "./dist/bundler/vite-plugin.mjs",
+      "require": "./dist/bundler/vite-plugin.js"
     },
     "./style.css": "./style.css",
     "./package.json": "./package.json"

@@ -1,4 +1,4 @@
-import { hash } from '../utils/hash'
+import { hash } from './hash'
 
 const ssrStyleCache = /* @__PURE__ */ new Set<string>(
   typeof document !== 'undefined'

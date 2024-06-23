@@ -1,7 +1,7 @@
 import postcss from 'postcss'
 import { expect, test } from 'vitest'
-import { createStyleContext } from '../src/lib/style'
-import molcssPostcssPlugin from '../src/postcss-plugin'
+import { createContext } from '../src/compiler/context'
+import molcssPostcssPlugin from '../src/compiler/postcss-plugin'
 
 test('postcss-plugin', async () => {
   const source = `
@@ -9,7 +9,7 @@ test('postcss-plugin', async () => {
   `
 
   const content = 'tests/assets/**/*.{ts,vue}'
-  const context = createStyleContext()
+  const context = createContext()
 
   const processor = postcss(molcssPostcssPlugin({ content, context }))
 

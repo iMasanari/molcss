@@ -1,7 +1,7 @@
 import * as ReactJsxRuntime from 'react/jsx-runtime'
-import { Molcss, createInlineStyleProps } from './react/react-jsx'
+import { Molcss, createInlineStyleProps } from './lib/react-jsx'
 
-export type { MolcssJSX as JSX } from './react/jsx-namespace'
+export type { MolcssJSX as JSX } from './lib/jsx-namespace'
 
 const { jsx: reactJsx, jsxs: reactJsxs, Fragment } = ReactJsxRuntime as any
 

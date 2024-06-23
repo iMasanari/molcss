@@ -1,3 +1,3 @@
-import molcssWebpackStyleLoader from '../dist/webpack/webpack-style-loader.js'
+import molcssWebpackStyleLoader from '../dist/bundler/webpack-style-loader.js'
 
 export = molcssWebpackStyleLoader

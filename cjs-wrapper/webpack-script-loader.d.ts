@@ -1,3 +1,3 @@
-import molcssWebpackScriptLoader from '../dist/webpack/webpack-script-loader.js'
+import molcssWebpackScriptLoader from '../dist/bundler/webpack-script-loader.js'
 
 export = molcssWebpackScriptLoader

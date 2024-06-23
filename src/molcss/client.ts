@@ -1,5 +1,5 @@
-import { shorthands } from './generated/defineCssProperties'
-import { insertStyle, generateRuntimeStyle } from './lib/runtime'
+import { shorthands } from '../generated/defineCssProperties'
+import { insertStyle, generateRuntimeStyle } from '../utils/runtime-style'
 
 const hasOwn = Object.prototype.hasOwnProperty
 

@@ -1,6 +1,6 @@
 import { basename, extname } from 'node:path'
 import { type NodePath, type PluginObj, type types as t } from '@babel/core'
-import { mergeStyle } from './client'
+import { mergeStyle } from '../molcss/client'
 import { StyleData } from './lib/css-parser'
 import { parseTagTemplate } from './lib/parse-tag-template'
 import { StyleContext, createClassName } from './lib/style'

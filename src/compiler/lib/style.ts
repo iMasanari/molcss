@@ -1,5 +1,5 @@
-import { defineProperties, shorthands } from '../generated/defineCssProperties'
-import { convertToAlphabet } from '../utils/convertor'
+import { defineProperties, shorthands } from '../../generated/defineCssProperties'
+import { convertToAlphabet } from '../../utils/convertor'
 import { StyleData } from './css-parser'
 
 const hasOwn = Object.prototype.hasOwnProperty

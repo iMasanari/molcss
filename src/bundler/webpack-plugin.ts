@@ -1,6 +1,6 @@
 import { createFilter } from '@rollup/pluginutils'
 import type { Compiler } from 'webpack'
-import { createContext } from './context'
+import { createContext } from '../compiler/context'
 
 export interface MolcssWebpackOptions {
   content: string | string[]

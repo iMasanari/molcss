@@ -1,2 +1,2 @@
 // @ts-check
-module.exports = require('../dist/webpack/webpack-script-loader.js').default
+module.exports = require('../dist/bundler/webpack-script-loader.js').default

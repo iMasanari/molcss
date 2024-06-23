@@ -20,10 +20,10 @@
     "declaration": true,
     "paths": {
       "molcss": [
-        "./src/client.ts"
+        "./src/molcss/client.ts"
       ],
       "molcss/react/jsx-runtime": [
-        "./src/jsx-runtime.ts"
+        "./src/react/jsx-runtime.ts"
       ]
     }
   },

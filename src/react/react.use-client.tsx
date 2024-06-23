@@ -2,7 +2,7 @@
 // use clientはビルドで追加される
 
 import React, { ReactNode, createContext, useContext, useInsertionEffect } from 'react'
-import { CacheableRuntimeStyleData, insertStyle } from './lib/runtime'
+import { CacheableRuntimeStyleData, insertStyle } from '../utils/runtime-style'
 
 type ExtractStyleCache = Map<string, string>
 

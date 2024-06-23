@@ -1,7 +1,8 @@
 import { BabelFileResult, transformAsync } from '@babel/core'
 import { expect, it, describe } from 'vitest'
-import plugin from '../src/babel-plugin'
-import { createStyle, createStyleContext } from '../src/lib/style'
+import plugin from '../src/compiler/babel-plugin'
+import { createContext } from '../src/compiler/context'
+import { createStyle } from '../src/compiler/lib/style'
 
 const formatActual = (actual: BabelFileResult | null) => {
   if (!actual) {
@@ -28,7 +29,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -54,7 +55,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -92,7 +93,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -119,7 +120,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -162,7 +163,7 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -192,7 +193,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (identifier)',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -221,7 +222,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (object)',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -263,7 +264,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (function).js',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -317,7 +318,7 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (class).js',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -380,7 +381,7 @@ describe('createStyle', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
@@ -437,7 +438,7 @@ it('css`...`', async () => {
   `
 
   const actual = await transformAsync(code, {
-    plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+    plugins: [[plugin, { devLabel: false, context: createContext() }]],
   })
 
   expect(formatActual(actual)).toMatchInlineSnapshot(`

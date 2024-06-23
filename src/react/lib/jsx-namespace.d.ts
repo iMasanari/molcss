@@ -1,5 +1,5 @@
 import React from 'react'
-import { RuntimeStyle } from '../client'
+import { RuntimeStyle } from '../../molcss/client'
 
 type CssPropValue =
   | string

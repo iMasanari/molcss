@@ -1,7 +1,7 @@
 import { transformAsync } from '@babel/core'
 import type { LoaderContext } from 'webpack'
-import molcssBabelPlugin from './babel-plugin'
-import { StyleContext } from './lib/style'
+import molcssBabelPlugin from '../compiler/babel-plugin'
+import { StyleContext } from '../compiler/context'
 
 interface Options {
   context: StyleContext

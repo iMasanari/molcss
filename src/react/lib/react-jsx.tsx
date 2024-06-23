@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
-import { mergeStyle } from '../client'
-import { CacheableRuntimeStyleData, generateRuntimeStyle } from '../lib/runtime'
-import { MolcssStyle } from '../nextjs.use-client'
+import { mergeStyle } from '../../molcss/client'
+import { CacheableRuntimeStyleData, generateRuntimeStyle } from '../../utils/runtime-style'
+import { MolcssStyle } from '../react.use-client'
 import { CssProp, CssPropValue } from './jsx-namespace'
 
 const useRuntimeStyle = (css: CssProp) => {

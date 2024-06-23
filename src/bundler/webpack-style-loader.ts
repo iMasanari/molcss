@@ -1,7 +1,7 @@
 import postcss from 'postcss'
 import type { LoaderContext } from 'webpack'
-import { StyleContext } from './lib/style'
-import postcssPlugin from './postcss-plugin'
+import { StyleContext } from '../compiler/context'
+import postcssPlugin from '../compiler/postcss-plugin'
 
 interface Options {
   context: StyleContext

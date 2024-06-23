@@ -1,4 +1,4 @@
-import { escapeRegExp } from '../utils/regExp'
+import { escapeRegExp } from '../../utils/regExp'
 
 const separator = ':::MOLCSS_SEPARATOR:::'
 

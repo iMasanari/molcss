@@ -1,3 +1,3 @@
-import molcssPostcssPlugin from '../dist/postcss-plugin.js'
+import molcssPostcssPlugin from '../dist/compiler/postcss-plugin.js'
 
 export = molcssPostcssPlugin
