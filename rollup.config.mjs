@@ -18,6 +18,9 @@ const serverInputs = {
   'context': './src/context.ts',
   'babel-plugin': './src/babel-plugin.ts',
   'postcss-plugin': './src/postcss-plugin.ts',
+  'webpack/webpack-plugin': './src/webpack-plugin.ts',
+  'webpack/webpack-script-loader': './src/webpack-script-loader.ts',
+  'webpack/webpack-style-loader': './src/webpack-style-loader.ts',
 }
 
 const config = defineConfig({

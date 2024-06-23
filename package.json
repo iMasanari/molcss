@@ -45,6 +45,21 @@
       "import": "./dist/postcss-plugin.mjs",
       "require": "./postcss-plugin/index.js"
     },
+    "./webpack-plugin": {
+      "types": "./dist/webpack/webpack-plugin.d.ts",
+      "import": "./dist/webpack/webpack-plugin.mjs",
+      "require": "./dist/webpack/webpack-plugin.js"
+    },
+    "./webpack-script-loader": {
+      "types": "./webpack-script-loader/index.d.ts",
+      "import": "./dist/webpack/webpack-script-loader.mjs",
+      "require": "./webpack-script-loader/index.cjs"
+    },
+    "./webpack-style-loader": {
+      "types": "./webpack-style-loader/index.d.ts",
+      "import": "./dist/webpack/webpack-style-loader.mjs",
+      "require": "./webpack-style-loader/index.cjs"
+    },
     "./style.css": "./style.css",
     "./package.json": "./package.json"
   },
@@ -73,13 +88,15 @@
     "examples/*"
   ],
   "dependencies": {
+    "@babel/core": "^7.24.3",
+    "@rollup/pluginutils": "^5.1.0",
     "css-selector-parser": "^3.0.5",
     "fast-glob": "^3.3.2",
+    "postcss": "^8.4.38",
     "stylis": "^4.3.1"
   },
   "peerDependencies": {
     "@types/react": ">= 17",
-    "postcss": ">= 8",
     "react": ">= 17"
   },
   "peerDependenciesMeta": {
