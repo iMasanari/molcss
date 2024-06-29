@@ -5,6 +5,7 @@ const withMolcss = molcss({
 })
 
 export default withMolcss({
+  basePath: process.env.BASE_PATH,
   output: 'export',
   trailingSlash: true,
 })
