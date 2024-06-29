@@ -22,12 +22,8 @@ type WithConditionalCSSProp<P> =
   : {}
   : {}
 
-// based on the code from @types/react@18.2.8
-// https://github.com/DefinitelyTyped/DefinitelyTyped/blob/3197efc097d522c4bf02b94e1a0766d007d6cdeb/types/react/index.d.ts#LL3204C13-L3204C13
-type ReactJSXElementType = string | React.JSX.ElementConstructor<any>
-
 export namespace MolcssJSX {
-  type ElementType = ReactJSXElementType
+  type ElementType = React.JSX.ElementType
   interface Element extends React.JSX.Element { }
   interface ElementClass extends React.JSX.ElementClass { }
   interface ElementAttributesProperty extends React.JSX.ElementAttributesProperty { }
