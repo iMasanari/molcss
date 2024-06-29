@@ -179,6 +179,41 @@ describe('css tag', () => {
       "
     `)
   })
+
+  it('css nested comma', async () => {
+    const code = `
+      import { css } from "molcss";
+      
+      css\`
+        &::after,
+        &::before {
+          contnet: '';
+          &:hover,
+          &:active {
+            color: red;
+          }
+        }
+      \`;
+    `
+
+    const actual = await transformAsync(code, {
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
+    })
+
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      "bL0a bL1b c0a c1b c2c c3d";
+
+      --- css ---
+      .c1b::before:hover{color:red}
+      .c3d::before:active{color:red}
+      .c0a::after:hover{color:red}
+      .c2c::after:active{color:red}
+      .bL1b::before{contnet:''}
+      .bL0a::after{contnet:''}
+      "
+    `)
+  })
 })
 
 describe('devLabel option', () => {

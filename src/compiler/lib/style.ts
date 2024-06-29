@@ -1,6 +1,6 @@
 import { defineProperties, shorthands } from '../../generated/defineCssProperties'
 import { convertToAlphabet } from '../../utils/convertor'
-import { StyleData } from './css-parser'
+import { DUMMY_NESTING_SELECTOR_CLASS_NAME_REG, StyleData } from './css-parser'
 
 const hasOwn = Object.prototype.hasOwnProperty
 
@@ -85,7 +85,7 @@ const sortFn = ([, a]: [unknown, StyleData], [, b]: [unknown, StyleData]) => {
 
 const getStyle = (result: StyleData, className: string) => {
   const styles = result.values.map(v => {
-    const style = `${v.selector.replace(/&\f?/g, `.${className}`)}{${result.prop}:${v.value}}`
+    const style = `${v.selector.replace(DUMMY_NESTING_SELECTOR_CLASS_NAME_REG, className)}{${result.prop}:${v.value}}`
 
     return v.atRule.reduceRight((acc, v) => `${v}{${acc}}`, style)
   })

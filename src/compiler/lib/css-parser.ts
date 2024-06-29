@@ -1,15 +1,16 @@
 import { AstEntity, AstRule, createParser } from 'css-selector-parser'
 import { COMMENT, DECLARATION, Element, MEDIA, RULESET, SUPPORTS, compile } from 'stylis'
 
-const NESTING_SELECTOR = '__MOLCSS_NESTING_SELECTOR__'
+export const DUMMY_NESTING_SELECTOR_CLASS_NAME = '__MOLCSS_DUMMY_NESTING_SELECTOR_CLASS_NAME__'
+export const DUMMY_NESTING_SELECTOR_CLASS_NAME_REG = new RegExp(DUMMY_NESTING_SELECTOR_CLASS_NAME, 'g')
 
 const selectorParser = createParser()
 
-const hasNestedSelector = (v: AstEntity) => v.type === 'TagName' && v.name === NESTING_SELECTOR
+const hasNestedSelector = (v: AstEntity) => v.type === 'ClassName' && v.name === DUMMY_NESTING_SELECTOR_CLASS_NAME
 const hasPseudoElement = (v: AstEntity) => v.type === 'PseudoElement'
 
 const isSelfSelector = (selector: string) => {
-  const ast = selectorParser(selector.replace(/&\f/g, NESTING_SELECTOR))
+  const ast = selectorParser(selector)
 
   // 複数セレクタの場合、暫定的にfalse（実装めんどい）
   if (ast.rules.length !== 1) {
@@ -42,7 +43,7 @@ export interface StyleData {
 }
 
 export const parse = (style: string): StyleData[] => {
-  const ast = compile(style)
+  const ast = compile(`.${DUMMY_NESTING_SELECTOR_CLASS_NAME}{${style}}`)
   const analyzed = ast.flatMap(element => analyzeStylisElement(element, [], ''))
 
   return [...new Set(analyzed.map(v => v.group))].map(group => {
@@ -71,7 +72,7 @@ const analyzeStylisElement = (element: Element, meta: string[], selector: string
       // prop: value;
       const prop = element.props as string
       const value = element.children as string
-      selector = selector || '&\f'
+      selector = selector || DUMMY_NESTING_SELECTOR_CLASS_NAME
 
       const group = `${isSelfSelector(selector) ? '' : selector}{${prop}`
 
@@ -79,10 +80,13 @@ const analyzeStylisElement = (element: Element, meta: string[], selector: string
     }
     case RULESET: {
       // selector { ... }
-      const nextSelector = selector ? `${selector} ${element.value}` : element.value
       const children = element.children as Element[]
 
-      return children.flatMap(child => analyzeStylisElement(child, meta, nextSelector))
+      return (element.props as string[]).flatMap(value => {
+        const nextSelector = selector ? `${selector} ${value}` : value
+
+        return children.flatMap(child => analyzeStylisElement(child, meta, nextSelector))
+      })
     }
     case MEDIA:
     case SUPPORTS: {
