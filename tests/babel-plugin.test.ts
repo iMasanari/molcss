@@ -1,12 +1,21 @@
 import { BabelFileResult, transformAsync } from '@babel/core'
 import { expect, it, describe } from 'vitest'
-import plugin from '../src/babel-plugin'
-import { createStyle, createStyleContext } from '../src/lib/style'
+import plugin from '../src/compiler/babel-plugin'
+import { createContext } from '../src/compiler/context'
+import { createStyle } from '../src/compiler/lib/style'
 
-const createStyleFromActual = (actual: BabelFileResult) => {
+const formatActual = (actual: BabelFileResult | null) => {
+  if (!actual) {
+    return ''
+  }
+
   const styleData = (actual.metadata as any).molcss
 
-  return createStyle(styleData)
+  return `--- js ---
+${actual.code ?? ''}
+
+--- css ---
+${createStyle(styleData)}`
 }
 
 describe('css tag', () => {
@@ -20,12 +29,15 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`""c0";"`)
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".c0{color:red}
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      "c0";
+
+      --- css ---
+      .c0{color:red}
       "
     `)
   })
@@ -43,19 +55,19 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      "const cssColor = 'blue';
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      const cssColor = 'blue';
       ({
         className: "c0 m0",
         runtime: [["bL", cssColor], ["bM", "1px solid " + cssColor]]
-      });"
-    `)
+      });
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".m0{border:var(--molcss-bM)}
+      --- css ---
+      .m0{border:var(--molcss-bM)}
       .c0{color:var(--molcss-bL)}
       "
     `)
@@ -68,17 +80,29 @@ describe('css tag', () => {
       css\`
         height: 100vh;
         height: 100dvh;
+        &:hover {
+          height: 1px;
+        }
+        &[data-hover] {
+          height: 2px;
+        }
+        & span {
+          height: 1%;
+        }
       \`;
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`""g0";"`)
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      "g0 g1a";
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".g0{height:100vh} .g0{height:100dvh}
+      --- css ---
+      .g0{height:100vh} .g0{height:100dvh} .g0:hover{height:1px} .g0[data-hover]{height:2px}
+      .g1a span{height:1%}
       "
     `)
   })
@@ -96,19 +120,19 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      "const value = 100;
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      const value = 100;
       ({
         className: "g0",
         runtime: [["bL", value + "vh"], ["bM", value + "dvh"]]
-      });"
-    `)
+      });
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".g0{height:var(--molcss-bL)} .g0{height:var(--molcss-bM)}
+      --- css ---
+      .g0{height:var(--molcss-bL)} .g0{height:var(--molcss-bM)}
       "
     `)
   })
@@ -139,19 +163,54 @@ describe('css tag', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      ""i0";
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      "i0";
       "i1";
-      "i2";"
-    `)
+      "i2";
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      "@media screen and (min-width: 900px){.i0{display:flex}}
+      --- css ---
+      @media screen and (min-width: 900px){.i0{display:flex}}
       @supports (display: grid){.i1{display:grid}}
       @supports (display: flex){@media screen and (min-width: 900px){.i2{display:flex}}}
+      "
+    `)
+  })
+
+  it('css nested comma', async () => {
+    const code = `
+      import { css } from "molcss";
+      
+      css\`
+        &::after,
+        &::before {
+          contnet: '';
+          &:hover,
+          &:active {
+            color: red;
+          }
+        }
+      \`;
+    `
+
+    const actual = await transformAsync(code, {
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
+    })
+
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      "bL0a bL1b c0a c1b c2c c3d";
+
+      --- css ---
+      .c1b::before:hover{color:red}
+      .c3d::before:active{color:red}
+      .c0a::after:hover{color:red}
+      .c2c::after:active{color:red}
+      .bL1b::before{contnet:''}
+      .bL0a::after{contnet:''}
       "
     `)
   })
@@ -169,13 +228,15 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (identifier)',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`"const identifierStyle = "__DEV-devLabelOptionIdentifier-identifierStyle__ c0";"`)
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      const identifierStyle = "__DEV-devLabelOptionIdentifier-identifierStyle__ c0";
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".c0{color:red}
+      --- css ---
+      .c0{color:red}
       "
     `)
   })
@@ -196,18 +257,18 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (object)',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      "const objectStyle = {
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      const objectStyle = {
         identifierStyle: "__DEV-devLabelOptionObject-identifierStyle__ c0",
         'literalStyle': "__DEV-devLabelOptionObject-literalStyle__ c1"
-      };"
-    `)
+      };
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".c0{color:red}
+      --- css ---
+      .c0{color:red}
       .c1{color:green}
       "
     `)
@@ -238,11 +299,12 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (function).js',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      "function functionDeclaration() {
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      function functionDeclaration() {
         "__DEV-devLabelOptionFunction-functionDeclaration__ c0";
       }
       const _ = function functionExpression() {
@@ -250,11 +312,10 @@ describe('devLabel option', () => {
       };
       const variableDeclaration = function () {
         "__DEV-devLabelOptionFunction-variableDeclaration__ c2";
-      };"
-    `)
+      };
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".c0{color:red}
+      --- css ---
+      .c0{color:red}
       .c1{color:green}
       .c2{color:blue}
       "
@@ -292,11 +353,12 @@ describe('devLabel option', () => {
 
     const actual = await transformAsync(code, {
       filename: 'devLabel option (class).js',
-      plugins: [[plugin, { devLabel: true, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: true, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      "class ClassDeclaration {
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      class ClassDeclaration {
         render() {
           "__DEV-devLabelOptionClass-ClassDeclaration__ c0";
         }
@@ -310,11 +372,10 @@ describe('devLabel option', () => {
         render() {
           "__DEV-devLabelOptionClass-VariableDeclaration__ c2";
         }
-      };"
-    `)
+      };
 
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".c0{color:red}
+      --- css ---
+      .c0{color:red}
       .c1{color:green}
       .c2{color:blue}
       "
@@ -355,19 +416,80 @@ describe('createStyle', () => {
     `
 
     const actual = await transformAsync(code, {
-      plugins: [[plugin, { devLabel: false, context: createStyleContext() }]],
+      plugins: [[plugin, { devLabel: false, context: createContext() }]],
     })
 
-    expect(actual?.code).toMatchInlineSnapshot(`
-      ""a0 a1a";
-      "a2 a3a";"
-    `)
-    expect(createStyleFromActual(actual!)).toMatchInlineSnapshot(`
-      ".a1a:hover{padding:10px 2px}
-      .a3a:hover{padding:20px 2px}
-      .a0{padding:10px 1px} @media screen and (min-width: 300px){.a0{padding:10px 3px}} @media screen and (min-width: 600px){.a0{padding:10px 4px}}
-      .a2{padding:20px 1px} @media screen and (max-width: 600px){.a2{padding:20px 3px}} @media screen and (max-width: 300px){.a2{padding:20px 4px}}
+    expect(formatActual(actual)).toMatchInlineSnapshot(`
+      "--- js ---
+      "a0";
+      "a1";
+
+      --- css ---
+      .a0{padding:10px 1px} .a0:hover{padding:10px 2px} @media screen and (min-width: 300px){.a0{padding:10px 3px}} @media screen and (min-width: 600px){.a0{padding:10px 4px}}
+      .a1{padding:20px 1px} .a1:hover{padding:20px 2px} @media screen and (max-width: 600px){.a1{padding:20px 3px}} @media screen and (max-width: 300px){.a1{padding:20px 4px}}
       "
     `)
   })
+})
+
+it('css`...`', async () => {
+  const code = `
+    import { css } from "molcss";
+    
+    css\`
+      color: red;
+    \`;
+
+    css\`
+      &:hover {
+        color: red;
+      }
+    \`;
+
+    css\`
+      &::after {
+        color: red;
+      }
+    \`;
+
+    css\`
+      & div {
+        color: red;
+      }
+    \`;
+
+    css\`
+      color: red;
+      &:hover {
+        color: red;
+      }
+      &::after {
+        color: red;
+      }
+      & div {
+        color: red;
+      }
+    \`;
+  `
+
+  const actual = await transformAsync(code, {
+    plugins: [[plugin, { devLabel: false, context: createContext() }]],
+  })
+
+  expect(formatActual(actual)).toMatchInlineSnapshot(`
+    "--- js ---
+    "c0";
+    "c1";
+    "c2a";
+    "c3b";
+    "c4 c2a c3b";
+
+    --- css ---
+    .c0{color:red}
+    .c1:hover{color:red}
+    .c4{color:red} .c4:hover{color:red}
+    .c2a::after{color:red}
+    .c3b div{color:red}
+    "
+  `)
 })

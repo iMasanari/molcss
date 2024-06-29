@@ -16,8 +16,7 @@ const getStyle = (className: string) => {
 const defaultStyle = getStyle('')
 
 describe('css', () => {
-  // NOTE: postcss化の際にテスト不可に
-  test.todo('css', () => {
+  test('css', () => {
     const style = getStyle(css`
       width: 100px;
       height: 200px;
@@ -30,8 +29,7 @@ describe('css', () => {
     })
   })
 
-  // NOTE: postcss化の際にテスト不可に
-  test.todo('css shorthands', () => {
+  test('css shorthands', () => {
     const style = getStyle(css`
       padding-top: 5px;
       padding: 10px 20px;
@@ -61,8 +59,7 @@ describe('mergeStyle', () => {
 })
 
 describe('mergeStyle + css', () => {
-  // NOTE: postcss化の際にテスト不可に
-  test.todo('mergeStyle + css', () => {
+  test('mergeStyle + css', () => {
     const fullWidthStyle = css`
       width: 100%;
       padding-top: 1px;

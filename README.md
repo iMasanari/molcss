@@ -101,17 +101,94 @@ const ForReact = () =>
 
 ## Setup
 
+Plugins are available for Vite, Next.js, and Webpack.  
+See [examples](https://github.com/iMasanari/molcss/tree/main/examples).
+
 ### Vite + React
 
-```sh
-npm install molcss
-npm install -D @vitejs/plugin-react
+```js
+// vite.config.mjs
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import molcss from 'molcss/vite-plugin'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react({
+      jsxImportSource: 'molcss/react',
+    }),
+    molcss({
+      content: 'src/**/*.{js,jsx,ts,tsx}',
+    })
+  ],
+})
 ```
 
 ```js
-// code
+// tsconfig.json (When using TypeScript)
+{
+  "compilerOptions": {
+    "jsxImportSource": "molcss/react",
+  }
+}
+```
+
+```js
+// entry point
 import 'molcss/style.css'
 ```
+
+### Next.js
+
+```js
+// next.config.mjs
+import molcss from 'molcss/nextjs-plugin'
+
+const withMolcss = molcss({
+  content: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    'app/**/*.{js,jsx,ts,tsx}',
+    'pages/**/*.{js,jsx,ts,tsx}',
+  ],
+})
+
+export default withMolcss({
+  // ...
+})
+```
+
+```js
+// package.json
+{
+  // Change the browserslist settings so that only Molcss converts Tagged templates.
+  // - safari 12 -> 13
+  // https://nextjs.org/docs/architecture/supported-browsers
+  "browserslist": [
+    "chrome 64",
+    "edge 79",
+    "firefox 67",
+    "opera 51",
+    "safari 13"
+  ]
+}
+```
+
+```js
+// tsconfig.json (or jsconfig.json)
+{
+  "compilerOptions": {
+    "jsxImportSource": "molcss/react",
+  }
+}
+```
+
+```js
+// entry point
+import 'molcss/style.css'
+```
+
+### Babel & PostCSS Plugin (with Vite + React)
 
 ```js
 // molcss.context.cjs
@@ -121,7 +198,7 @@ module.exports = createContext()
 ```
 
 ```js
-// vite.config.js
+// vite.config.mjs
 import { createRequire } from 'node:module'
 import react from '@vitejs/plugin-react'
 
@@ -144,7 +221,6 @@ export default defineConfig({
   ]
 })
 ```
-
 
 ```js
 // postcss.config.cjs
@@ -169,141 +245,8 @@ module.exports = {
 }
 ```
 
-### Next.js appDir
-
-```sh
-npm install molcss
-npm install babel-loader postcss-flexbugs-fixes postcss-preset-env
-```
-
 ```js
-// code
+// entry point
 import 'molcss/style.css'
 ```
 
-```js
-// molcss.context.js
-const { createContext } = require('molcss/context')
-
-module.exports = createContext()
-```
-
-```js
-// next.config.js
-const molcssContext = require('./molcss.context')
-
-module.exports = {
-  webpack(config) {
-    config.module.rules.unshift({
-      test: /\.(jsx?|tsx?)$/i,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      options: {
-        plugins: [
-          ['molcss/babel-plugin', {
-            context: molcssContext,
-          }],
-        ],
-      },
-    })
-
-    return config
-  },
-}
-```
-
-```js
-// postcss.config.js
-const molcssContext = require('./molcss.context')
-
-module.exports = {
-  plugins: [
-    // nextjs default settings
-    // https://nextjs.org/docs/pages/building-your-application/configuring/post-css#customizing-plugins
-    'postcss-flexbugs-fixes',
-    ['postcss-preset-env', {
-      autoprefixer: {
-        flexbox: 'no-2009',
-      },
-      stage: 3,
-      features: {
-        'custom-properties': false,
-      },
-    }],
-    // molcss settings
-    ['molcss/postcss-plugin', {
-      content: [
-        'app/**/*.{js,jsx,ts,tsx}',
-        'src/**/*.{js,jsx,ts,tsx}',
-      ],
-      context: molcssContext,
-    }],
-  ],
-}
-```
-
-```js
-// package.json
-// Change the browserslist settings so that only Molcss converts Tagged templates.
-// - safari 12 -> 13
-// https://nextjs.org/docs/architecture/supported-browsers
-{
-  "browserslist": [
-    "chrome 64",
-    "edge 79",
-    "firefox 67",
-    "opera 51",
-    "safari 13"
-  ]
-}
-```
-
-```js
-// tsconfig.json (or jsconfig.json)
-{
-  "compilerOptions": {
-    "jsxImportSource": "molcss/react",
-  }
-}
-```
-
-<!--
-### webpack (experimental)
-
-```js
-// code
-import 'molcss/style.css'
-```
-
-```js
-// webpack.config.js
-const MolcssPlugin = require('molcss/webpack-plugin').default
-
-module.exports = {
-  // ...
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx|ts|tsx)$/,
-        use: [
-          MolcssPlugin.loader,
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
-      },
-    ],
-  },
-  plugins: [
-    new MolcssPlugin({
-      content: 'src/**.{js,jsx,ts,tsx}',
-    }),
-  ],
-  // ...
-}
-```
--->

@@ -1,5 +1,0 @@
-{
-  "main": "../dist/react/react.js",
-  "module": "../dist/react/react.mjs",
-  "types": "../dist/react/react.d.ts"
-}

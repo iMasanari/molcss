@@ -1,7 +1,7 @@
 import postcss from 'postcss'
 import { expect, test } from 'vitest'
-import { createStyleContext } from '../src/lib/style'
-import molcssPostcssPlugin from '../src/postcss-plugin'
+import { createContext } from '../src/compiler/context'
+import molcssPostcssPlugin from '../src/compiler/postcss-plugin'
 
 test('postcss-plugin', async () => {
   const source = `
@@ -9,7 +9,7 @@ test('postcss-plugin', async () => {
   `
 
   const content = 'tests/assets/**/*.{ts,vue}'
-  const context = createStyleContext()
+  const context = createContext()
 
   const processor = postcss(molcssPostcssPlugin({ content, context }))
 
@@ -17,5 +17,5 @@ test('postcss-plugin', async () => {
     from: 'tests/postcss-plugin.test.css',
   })
 
-  expect(result.css).toMatchInlineSnapshot(`".a0{padding:4px}.c1a:hover{color:blue}.c0{color:red}"`)
+  expect(result.css).toMatchInlineSnapshot(`".a0{padding:4px}.c0{color:red}.c1:hover{color:blue}"`)
 })

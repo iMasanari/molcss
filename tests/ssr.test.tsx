@@ -3,9 +3,9 @@
 import { css } from 'molcss'
 import { renderToString } from 'react-dom/server'
 import { afterEach, expect, test, vi } from 'vitest'
-import { MolcssProvider } from '../src/nextjs.use-client'
-import { createExtractStyleCache } from '../src/react'
-import { extractCritical } from '../src/server'
+import { extractCritical } from '../src/molcss/server'
+import { createExtractStyleCache } from '../src/react/react'
+import { MolcssProvider } from '../src/react/react.use-client'
 
 const fomat = (html: string) =>
   html.replace(/><(?!\/)/g, '>\n<')

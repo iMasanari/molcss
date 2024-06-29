@@ -6,18 +6,23 @@ import esbuild from 'rollup-plugin-esbuild'
 import packages from './package.json' assert { type: 'json' }
 
 const clientInputs =  {
-  'molcss': './src/client.ts',
-  'react/react': './src/react.tsx',
-  'react/jsx-runtime': './src/jsx-runtime.ts',
-  'react/jsx-dev-runtime': './src/jsx-dev-runtime.ts',
-  'react/nextjs.use-client': './src/nextjs.use-client.tsx',
+  'molcss/molcss': './src/molcss/client.ts',
+  'react/react': './src/react/react.tsx',
+  'react/react.use-client': './src/react/react.use-client.tsx',
+  'react/jsx-runtime': './src/react/jsx-runtime.ts',
+  'react/jsx-dev-runtime': './src/react/jsx-dev-runtime.ts',
 }
 
 const serverInputs = {
-  'server': './src/server.ts',
-  'context': './src/context.ts',
-  'babel-plugin': './src/babel-plugin.ts',
-  'postcss-plugin': './src/postcss-plugin.ts',
+  'molcss/server': './src/molcss/server.ts',
+  'compiler/context': './src/compiler/context.ts',
+  'compiler/babel-plugin': './src/compiler/babel-plugin.ts',
+  'compiler/postcss-plugin': './src/compiler/postcss-plugin.ts',
+  'bundler/webpack-plugin': './src/bundler/webpack-plugin.ts',
+  'bundler/webpack-script-loader': './src/bundler/webpack-script-loader.ts',
+  'bundler/webpack-style-loader': './src/bundler/webpack-style-loader.ts',
+  'bundler/nextjs-plugin': './src/bundler/nextjs-plugin.ts',
+  'bundler/vite-plugin': './src/bundler/vite-plugin.ts',
 }
 
 const config = defineConfig({
