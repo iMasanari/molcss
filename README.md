@@ -88,14 +88,39 @@ console.log(typeof staticStyle)         // string
 console.log(typeof dynamicStyle('red')) // object
 
 const ForVanillaJS = () => `
-  <div class=${staticStyle}></div>
-  <div class=${generateRuntime(dynamicStyle('red'))}></div>
+  <div class="${staticStyle}"></div>
+  <div class="${generateRuntime(dynamicStyle('red'))}"></div>
 `
 
 const ForReact = () =>
   <>
     <div className={staticStyle} />
     <div css={dynamicStyle('red')} />
+  </>
+```
+
+#### Zero-Runtime Runtime Style (experimental)
+
+```jsx
+import { css, toInlineProps } from 'molcss'
+
+const dynamicStyle = (color) => css`
+  color: ${color};
+`
+
+const props = toInlineProps({ css: dynamicStyle('red') })
+
+const ZeroRuntimeForVanillaJS = () =>
+  `<div
+    class="${props.className}"
+    style="${Object.entries(props.style).map(([key, value]) => `${key}:${value};`).join('')}"
+  ></div>`
+
+const ZeroRuntimeForReact = () =>
+  <>
+    <div className={props.className} style={props.style} />
+    {/* or */}
+    <div {...toInlineProps({ css: dynamicStyle('green') })} />
   </>
 ```
 
