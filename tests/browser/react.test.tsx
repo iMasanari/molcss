@@ -3,7 +3,8 @@
 import 'molcss/style.css'
 
 import { render, screen } from '@testing-library/react'
-import { css } from 'molcss'
+import { toInlineProps, css } from 'molcss'
+import { ComponentProps } from 'react'
 import { expect, test } from 'vitest'
 
 test('use in react', () => {
@@ -83,5 +84,21 @@ test('css prop with nest className', () => {
 
   expect(target).toHaveStyle({
     margin: '8px',
+  })
+})
+
+test('use in react with toInlineProps', () => {
+  const Test = (props: ComponentProps<'div'>) => <div {...props} />
+
+  const molcssStyle = (value: number) => css`
+    margin: ${value}px;
+  `
+
+  render(<Test {...toInlineProps({ css: molcssStyle(10) })} data-testid="target" />)
+
+  const target = screen.getByTestId('target')
+
+  expect(target).toHaveStyle({
+    margin: '10px',
   })
 })

@@ -1,16 +1,6 @@
 import React from 'react'
 import { RuntimeStyle } from '../../molcss/client'
 
-type CssPropValue =
-  | string
-  | RuntimeStyle
-  | undefined
-  | null
-  | false
-  | 0
-
-export type CssProp = CssPropValue | CssPropValue[]
-
 interface MolcssProps {
   css?: CssProp
 }

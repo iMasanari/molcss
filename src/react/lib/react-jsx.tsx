@@ -1,8 +1,7 @@
 import React, { forwardRef } from 'react'
-import { mergeStyle } from '../../molcss/client'
+import { CssProp, mergeStyle } from '../../molcss/client'
 import { CacheableRuntimeStyleData, generateRuntimeStyle } from '../../utils/runtime-style'
 import { MolcssStyle } from '../react.use-client'
-import { CssProp, CssPropValue } from './jsx-namespace'
 
 const useRuntimeStyle = (css: CssProp) => {
   const styleData: CacheableRuntimeStyleData[] = []
@@ -43,36 +42,3 @@ export const Molcss = forwardRef((props: any, ref: any) => {
     </>
   )
 })
-
-export const createInlineStyleProps = (props: any) => {
-  const styles: CssPropValue[] = Array.isArray(props.css) ? props.css : [props.css]
-
-  const className = mergeStyle(
-    props.className,
-    ...styles.flatMap(style =>
-      style && typeof style === 'object'
-        ? [style.className, ...style.runtime.map(v => `${v[0]}00`)]
-        : style || []
-    )
-  )
-
-  const classList = new Set(className.split(' '))
-
-  const styleList = styles.flatMap(style =>
-    style && typeof style === 'object'
-      ? style.runtime.map(v => {
-        const propKey = v[0]
-        const value = classList.has(`${propKey}00`) ? v[1] + '' : undefined
-
-        return [`--molcss-${propKey}`, value] as const
-      })
-      : []
-  )
-
-  return {
-    ...props,
-    css: undefined,
-    className,
-    style: { ...props.style, ...Object.fromEntries(styleList) },
-  }
-}

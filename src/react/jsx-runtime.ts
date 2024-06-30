@@ -1,5 +1,6 @@
 import * as ReactJsxRuntime from 'react/jsx-runtime'
-import { Molcss, createInlineStyleProps } from './lib/react-jsx'
+import { toInlineProps } from '../molcss/client'
+import { Molcss } from './lib/react-jsx'
 
 export type { MolcssJSX as JSX } from './lib/jsx-namespace'
 
@@ -15,7 +16,7 @@ export const jsx = (type: any, props: any, key: any) => {
   }
 
   if (typeof type === 'string') {
-    return reactJsx(type, createInlineStyleProps(props), key)
+    return reactJsx(type, toInlineProps(props), key)
   }
 
   return reactJsx(Molcss, { ...props, css: [type, props.css] }, key)
@@ -27,7 +28,7 @@ export const jsxs = (type: any, props: any, key: any) => {
   }
 
   if (typeof type === 'string') {
-    return reactJsxs(type, createInlineStyleProps(props), key)
+    return reactJsxs(type, toInlineProps(props), key)
   }
 
   return reactJsxs(Molcss, { ...props, css: [type, props.css] }, key)

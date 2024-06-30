@@ -55,5 +55,64 @@ export const mergeStyle = (...classNames: (string | false | null | undefined)[])
   return Object.values(styles).join(' ')
 }
 
+type CssPropValue =
+  | string
+  | RuntimeStyle
+  | undefined
+  | null
+  | false
+  | 0
+
+export type CssProp = CssPropValue | CssPropValue[]
+
+interface InlinePropsWithCss {
+  css: CssProp
+  className?: string
+  style?: object
+}
+
+type InlineProps<P extends InlinePropsWithCss> = Omit<P, keyof InlinePropsWithCss> & {
+  className: string
+  style: P['style'] & { [K in `--molcss-${string}`]?: string }
+}
+
+export const toInlineProps = <P extends InlinePropsWithCss>({ css, ...props }: P): InlineProps<P> => {
+  const cssPropList = Array.isArray(css) ? css : [css]
+
+  const className = mergeStyle(
+    props.className,
+    ...cssPropList.flatMap(style =>
+      style && typeof style === 'object'
+        ? [style.className, ...style.runtime.map(v => `${v[0]}00`)]
+        : style
+    )
+  )
+
+  const classList = new Set(className.split(' '))
+
+  const style = { ...props.style } as P['style'] & { [K in `--molcss-${string}`]?: string }
+
+  cssPropList.forEach(cssProp => {
+    if (cssProp && typeof cssProp === 'object') {
+      cssProp.runtime.forEach(item => {
+        const propKey = item[0]
+        const key = `--molcss-${propKey}` as const
+
+        if (classList.has(`${propKey}00`)) {
+          style[key] = item[1] + ''
+        } else {
+          delete style[key]
+        }
+      })
+    }
+  })
+
+  return {
+    ...props as Omit<P, keyof InlinePropsWithCss>,
+    className,
+    style,
+  }
+}
+
 export const generateRuntime = (style: RuntimeStyle) =>
   style.runtime.reduce((acc, v) => acc + ' ' + generateRuntimeStyle(v[0], v[1], insertStyle), style.className)

@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
 import 'molcss/style.css'
-import { css, mergeStyle } from 'molcss'
+import { css } from 'molcss'
 import { describe, expect, test } from 'vitest'
+import { mergeStyle, toInlineProps, RuntimeStyle } from '../src/molcss/client'
 
 const getStyle = (className: string) => {
   const target = document.createElement('div')
@@ -85,6 +86,60 @@ describe('mergeStyle + css', () => {
       width: '100%',
       'padding-top': '1px',
       'padding-bottom': '1px',
+    })
+  })
+})
+
+describe('toInlineProps', () => {
+  test('toInlineProps', () => {
+    const runtimeStyle: RuntimeStyle = {
+      className: 'a0',
+      runtime: [['A', 1]],
+    }
+
+    const result = toInlineProps({ css: runtimeStyle })
+
+    expect(result).toStrictEqual({
+      className: 'a0 A00',
+      style: {
+        '--molcss-A': '1',
+      },
+    })
+  })
+
+  test('toInlineProps', () => {
+    const runtimeStyle: RuntimeStyle = {
+      className: 'a0 b0 c0',
+      runtime: [['A', 1], ['B', '1px'], ['C', 'xxx']],
+    }
+
+    const result = toInlineProps({
+      css: [runtimeStyle, 'b0 B123456'],
+      className: 'a1 z0',
+      style: { color: 'red' },
+    })
+
+    expect(result).toStrictEqual({
+      className: 'a0 z0 b0 c0 A00 B123456 C00',
+      style: {
+        '--molcss-A': '1',
+        '--molcss-C': 'xxx',
+        color: 'red',
+      },
+    })
+  })
+
+  test('toInlineProps with empty', () => {
+    const runtimeStyle: RuntimeStyle = {
+      className: '',
+      runtime: [],
+    }
+
+    const result = toInlineProps({ css: runtimeStyle })
+
+    expect(result).toStrictEqual({
+      className: '',
+      style: {},
     })
   })
 })
