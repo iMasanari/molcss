@@ -8,6 +8,8 @@ export default defineConfig({
       { find: 'molcss/style.css', replacement: `${__dirname}/style.css` },
       { find: 'molcss/react/jsx-runtime', replacement: `${__dirname}/src/react/jsx-runtime.ts` },
       { find: 'molcss/react/jsx-dev-runtime', replacement: `${__dirname}/src/react/jsx-dev-runtime.ts` },
+      { find: 'molcss/react-19/jsx-runtime', replacement: `${__dirname}/src/react-19/jsx-runtime.ts` },
+      { find: 'molcss/react-19/jsx-dev-runtime', replacement: `${__dirname}/src/react-19/jsx-dev-runtime.ts` },
       { find: 'molcss', replacement: `${__dirname}/src/molcss/client.ts` },
     ],
   },

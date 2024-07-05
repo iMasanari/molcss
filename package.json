@@ -30,6 +30,16 @@
       "import": "./dist/react/jsx-dev-runtime.mjs",
       "require": "./dist/react/jsx-dev-runtime.js"
     },
+    "./react-19/jsx-runtime": {
+      "types": "./dist/react-19/jsx-runtime.d.ts",
+      "import": "./dist/react-19/jsx-runtime.mjs",
+      "require": "./dist/react-19/jsx-runtime.js"
+    },
+    "./react-19/jsx-dev-runtime": {
+      "types": "./dist/react-19/jsx-dev-runtime.d.ts",
+      "import": "./dist/react-19/jsx-dev-runtime.mjs",
+      "require": "./dist/react-19/jsx-dev-runtime.js"
+    },
     "./context": {
       "types": "./dist/compiler/context.d.ts",
       "import": "./dist/compiler/context.mjs",
@@ -130,6 +140,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.4",
+    "@testing-library/dom": "^10.3.1",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/babel__core": "^7.20.5",
@@ -140,7 +151,8 @@
     "esbuild-register": "^3.5.0",
     "jsdom": "^24.1.0",
     "postcss": "^8.4.38",
-    "react": "^18.3.1",
+    "react": "19.0.0-rc-3da26163a3-20240704",
+    "react-dom": "19.0.0-rc-3da26163a3-20240704",
     "rollup": "^4.18.0",
     "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-esbuild": "^6.1.1",

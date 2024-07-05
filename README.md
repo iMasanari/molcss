@@ -275,3 +275,6 @@ module.exports = {
 import 'molcss/style.css'
 ```
 
+### Use React 19 `style` (experimental)
+
+Change `jsxImportSource` from `molcss/react` to `molcss/react-19`.

@@ -71,3 +71,8 @@ export const generateRuntimeStyle = (
 
   return className
 }
+
+export const getRuntimeStyle = (prop: string, value: string | number | bigint) => {
+  // MEMO: ハッシュ処理をキャッシュ化するか検討すること
+  return prop + hash('' + value)
+}

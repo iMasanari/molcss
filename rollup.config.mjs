@@ -11,6 +11,8 @@ const clientInputs =  {
   'react/react.use-client': './src/react/react.use-client.tsx',
   'react/jsx-runtime': './src/react/jsx-runtime.ts',
   'react/jsx-dev-runtime': './src/react/jsx-dev-runtime.ts',
+  'react-19/jsx-runtime': './src/react-19/jsx-runtime.ts',
+  'react-19/jsx-dev-runtime': './src/react-19/jsx-dev-runtime.ts',
 }
 
 const serverInputs = {
