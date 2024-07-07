@@ -22,37 +22,94 @@ export const css: CssTagFunction = () => {
   throw new Error(cssErrorMessage)
 }
 
-const getPropertyData = (str: string) => {
-  const match = str.match(/^([A-Za-z]+)\d+([A-Za-z]*)$/)
+export const mergeStyle = (...classNames: (string | 0 | false | null | undefined)[]) => {
+  const styles = {} as Record<string, string>
+  let index = 0
 
-  if (!match) {
-    return null
-  }
+  classNames.forEach(multiPartClassName => {
+    if (!multiPartClassName) return
 
-  return {
-    key: `${match[1]}/${match[2]}`,
-    shorthands: hasOwn.call(shorthands, match[1]!)
-      ? shorthands[match[1]!]!.map(v => `${v}/${match[2]}`)
-      : null,
-  }
+    multiPartClassName.split(/[\t\r\f\n ]+/).forEach(className => {
+      const match = className.match(/^([A-Za-z]+)\d+([A-Za-z]*)$/)
+
+      if (!match) {
+        styles[++index] = className
+        return
+      }
+
+      const propKey = match[1]!
+      const metaKey = match[2]
+
+      styles[`${propKey}/${metaKey}`] = className
+
+      if (hasOwn.call(shorthands, propKey)) {
+        shorthands[propKey]!.forEach(shorthandPropKey => {
+          delete styles[`${shorthandPropKey}/${metaKey}`]
+        })
+      }
+    })
+  })
+
+  return Object.values(styles).join(' ')
 }
 
-export const mergeStyle = (...classNames: (string | false | null | undefined)[]) => {
-  const styles = {} as Record<string | symbol, string>
+type CssPropValue =
+  | string
+  | RuntimeStyle
+  | undefined
+  | null
+  | false
+  | 0
 
-  classNames.flatMap(className => className ? className.split(/[\t\r\f\n ]+/) : []).forEach((className, i) => {
-    const propertyData = getPropertyData(className)
+export type CssProp = CssPropValue | CssPropValue[]
 
-    styles[propertyData ? propertyData.key : `$$${i}`] = className
+interface InlinePropsWithCss {
+  css: CssProp
+  className?: string
+  style?: object
+}
 
-    if (propertyData && propertyData.shorthands) {
-      propertyData.shorthands.forEach(v => {
-        delete styles[v]
+type InlineProps<P extends InlinePropsWithCss> = Omit<P, keyof InlinePropsWithCss> & {
+  className: string
+  style: P['style'] & { [K in `--molcss-${string}`]?: string }
+}
+
+export const toInlineProps = <P extends InlinePropsWithCss>({ css, ...props }: P): InlineProps<P> => {
+  const cssPropList = Array.isArray(css) ? css : [css]
+
+  const className = mergeStyle(
+    props.className,
+    ...cssPropList.flatMap(style =>
+      style && typeof style === 'object'
+        ? [style.className, ...style.runtime.map(v => `${v[0]}00`)]
+        : style
+    )
+  )
+
+  const classList = new Set(className.split(' '))
+
+  const style = { ...props.style } as P['style'] & { [K in `--molcss-${string}`]?: string }
+
+  cssPropList.forEach(cssProp => {
+    if (cssProp && typeof cssProp === 'object') {
+      cssProp.runtime.forEach(item => {
+        const propKey = item[0]
+        const key = `--molcss-${propKey}` as const
+
+        if (classList.has(`${propKey}00`)) {
+          style[key] = item[1] + ''
+        } else {
+          delete style[key]
+        }
       })
     }
   })
 
-  return Object.values(styles).join(' ')
+  return {
+    ...props as Omit<P, keyof InlinePropsWithCss>,
+    className,
+    style,
+  }
 }
 
 export const generateRuntime = (style: RuntimeStyle) =>

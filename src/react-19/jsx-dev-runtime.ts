@@ -1,8 +1,8 @@
 import * as ReactJsxDevRuntime from 'react/jsx-dev-runtime'
 import { toInlineProps } from '../molcss/client'
-import { Molcss } from './lib/react-jsx'
+import { Molcss } from './lib/react-19-jsx'
 
-export type { MolcssJSX as JSX } from './lib/jsx-namespace'
+export type { MolcssJSX as JSX } from '../react/lib/jsx-namespace'
 
 const { jsxDEV: reactJsxDEV, Fragment } = ReactJsxDevRuntime as any
 

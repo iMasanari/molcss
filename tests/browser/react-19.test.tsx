@@ -1,4 +1,4 @@
-/** @jsxImportSource molcss/react */
+/** @jsxImportSource molcss/react-19 */
 
 import 'molcss/style.css'
 
@@ -8,7 +8,7 @@ import { ComponentProps } from 'react'
 import { expect, test } from 'vitest'
 import { toInlineProps } from '../../src/molcss/client'
 
-test('use in react', () => {
+test('use in react 19', () => {
   const molcssStyle = css`
     width: 100px;
   `
