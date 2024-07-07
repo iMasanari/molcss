@@ -20,7 +20,7 @@
     "declaration": true,
     "paths": {
       "molcss": [
-        "./src/molcss/client.ts"
+        "./tests/molcss.d.ts"
       ],
       "molcss/react/jsx-runtime": [
         "./src/react/jsx-runtime.ts"

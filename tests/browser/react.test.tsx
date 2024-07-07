@@ -3,9 +3,10 @@
 import 'molcss/style.css'
 
 import { render, screen } from '@testing-library/react'
-import { toInlineProps, css } from 'molcss'
+import { css } from 'molcss'
 import { ComponentProps } from 'react'
 import { expect, test } from 'vitest'
+import { toInlineProps } from '../../src/molcss/client'
 
 test('use in react', () => {
   const molcssStyle = css`
