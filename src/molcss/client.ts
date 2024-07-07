@@ -22,34 +22,32 @@ export const css: CssTagFunction = () => {
   throw new Error(cssErrorMessage)
 }
 
-const getPropertyData = (str: string) => {
-  const match = str.match(/^([A-Za-z]+)\d+([A-Za-z]*)$/)
+export const mergeStyle = (...classNames: (string | 0 | false | null | undefined)[]) => {
+  const styles = {} as Record<string, string>
+  let index = 0
 
-  if (!match) {
-    return null
-  }
+  classNames.forEach(multiPartClassName => {
+    if (!multiPartClassName) return
 
-  return {
-    key: `${match[1]}/${match[2]}`,
-    shorthands: hasOwn.call(shorthands, match[1]!)
-      ? shorthands[match[1]!]!.map(v => `${v}/${match[2]}`)
-      : null,
-  }
-}
+    multiPartClassName.split(/[\t\r\f\n ]+/).forEach(className => {
+      const match = className.match(/^([A-Za-z]+)\d+([A-Za-z]*)$/)
 
-export const mergeStyle = (...classNames: (string | false | null | undefined)[]) => {
-  const styles = {} as Record<string | symbol, string>
+      if (!match) {
+        styles[++index] = className
+        return
+      }
 
-  classNames.flatMap(className => className ? className.split(/[\t\r\f\n ]+/) : []).forEach((className, i) => {
-    const propertyData = getPropertyData(className)
+      const propKey = match[1]!
+      const metaKey = match[2]
 
-    styles[propertyData ? propertyData.key : `$$${i}`] = className
+      styles[`${propKey}/${metaKey}`] = className
 
-    if (propertyData && propertyData.shorthands) {
-      propertyData.shorthands.forEach(v => {
-        delete styles[v]
-      })
-    }
+      if (hasOwn.call(shorthands, propKey)) {
+        shorthands[propKey]!.forEach(shorthandPropKey => {
+          delete styles[`${shorthandPropKey}/${metaKey}`]
+        })
+      }
+    })
   })
 
   return Object.values(styles).join(' ')
