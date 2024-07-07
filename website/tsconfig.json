@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "jsxImportSource": "molcss/react",
+    "jsxImportSource": "molcss/react-19",
     "incremental": true,
     "plugins": [
       {
