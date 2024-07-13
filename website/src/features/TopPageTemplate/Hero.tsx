@@ -1,4 +1,5 @@
 import { css } from 'molcss'
+import Link from 'next/link'
 import Button from '@/components/Button'
 
 const heroStyle = css`
@@ -31,7 +32,7 @@ export default function Hero() {
         <h1 className={titleStyle}>Molcss</h1>
         <p className={descriptionStyle}>A simple, lightweight, and powerful CSS-in-JS library.</p>
       </div>
-      <Button as="a" className={getStartedButtonStyle} href="https://github.com/iMasanari/molcss#readme" target="_blank" rel="noopener">
+      <Button as={Link} className={getStartedButtonStyle} href="/docs">
         Get Started
       </Button>
     </div>
