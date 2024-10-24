@@ -4,7 +4,21 @@ import { COMMENT, DECLARATION, Element, MEDIA, RULESET, SUPPORTS, compile } from
 export const DUMMY_NESTING_SELECTOR_CLASS_NAME = '__MOLCSS_DUMMY_NESTING_SELECTOR_CLASS_NAME__'
 export const DUMMY_NESTING_SELECTOR_CLASS_NAME_REG = new RegExp(DUMMY_NESTING_SELECTOR_CLASS_NAME, 'g')
 
-const selectorParser = createParser()
+const selectorParser = createParser({
+  strict: false,
+  syntax: {
+    baseSyntax: 'latest',
+    attributes: {
+      unknownCaseSensitivityModifiers: 'accept',
+    },
+    pseudoElements: {
+      unknown: 'accept',
+    },
+    pseudoClasses: {
+      unknown: 'accept',
+    },
+  },
+})
 
 const hasNestedSelector = (v: AstEntity) => v.type === 'ClassName' && v.name === DUMMY_NESTING_SELECTOR_CLASS_NAME
 const hasPseudoElement = (v: AstEntity) => v.type === 'PseudoElement'
