@@ -1,5 +1,5 @@
 import { css, mergeStyle } from 'molcss'
-import CodeHighlight from './CodeHighlight'
+import { ReactNode } from 'react'
 
 const codeAreaStyle = css`
   display: flex;
@@ -11,27 +11,17 @@ const titleStyle = css`
   margin: 8px 0;
 `
 
-const preStyle = css`
-  overflow-x: auto;
-  flex: 1;
-  padding: 0 16px 16px;
-  margin: 0;
-`
-
 interface Props {
   className?: string
   title: string
-  code: string
-  lang: string
+  children: ReactNode
 }
 
-export default function CodeArea({ className, title, code, lang }: Props) {
+export default function CodeArea({ className, title, children }: Props) {
   return (
     <div className={mergeStyle(codeAreaStyle, className)}>
       <div className={titleStyle}>{title}</div>
-      <pre className={preStyle}>
-        <CodeHighlight code={code} lang={lang} />
-      </pre>
+      {children}
     </div>
   )
 }

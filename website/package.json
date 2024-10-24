@@ -12,10 +12,12 @@
     "molcss": "../",
     "next": "15.0.0-canary.57",
     "react": "19.0.0-rc.0",
-    "react-dom": "19.0.0-rc.0",
-    "shiki": "0.14.7"
+    "react-dom": "19.0.0-rc.0"
   },
   "devDependencies": {
+    "@mdx-js/loader": "^3.0.1",
+    "@next/mdx": "^14.2.5",
+    "@shikijs/rehype": "^1.10.3",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",

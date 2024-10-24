@@ -28,6 +28,7 @@ export default class MolcssPlugin {
       loader: scriptLoader,
       options: {
         context: this.context,
+        dir: compiler.context,
       },
     })
 

@@ -30,7 +30,7 @@ export const mergeStyle = (...classNames: (string | 0 | false | null | undefined
     if (!multiPartClassName) return
 
     multiPartClassName.split(/[\t\r\f\n ]+/).forEach(className => {
-      const match = className.match(/^([A-Za-z]+)\d+([A-Za-z]*)$/)
+      const match = className.match(/^([A-Za-z]+)\d+$/)
 
       if (!match) {
         styles[++index] = className
@@ -38,13 +38,11 @@ export const mergeStyle = (...classNames: (string | 0 | false | null | undefined
       }
 
       const propKey = match[1]!
-      const metaKey = match[2]
-
-      styles[`${propKey}/${metaKey}`] = className
+      styles[propKey] = className
 
       if (hasOwn.call(shorthands, propKey)) {
         shorthands[propKey]!.forEach(shorthandPropKey => {
-          delete styles[`${shorthandPropKey}/${metaKey}`]
+          delete styles[shorthandPropKey]
         })
       }
     })

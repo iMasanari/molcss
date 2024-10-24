@@ -1,6 +1,14 @@
-import { readFile } from 'node:fs/promises'
-import { css } from 'molcss'
+import { css, mergeStyle } from 'molcss'
+import { ComponentProps } from 'react'
 import CodeArea from '../CodeArea/CodeArea'
+import ExtractInput from './samples/extract-input.mdx'
+import ExtractOutputCss from './samples/extract-output-css.mdx'
+import ExtractOutputJs from './samples/extract-output-js.mdx'
+import SsrInput from './samples/ssr-input.mdx'
+import SsrOutputCss from './samples/ssr-output-css.mdx'
+import SsrOutputHtml from './samples/ssr-output-html.mdx'
+import SupportReact from './samples/support-react.mdx'
+import SupportVanila from './samples/support-vanilla.mdx'
 
 const rootStyle = css`
   display: flex;
@@ -22,29 +30,34 @@ const colStyle = css`
   border-radius: 4px;
 `
 
+const preStyle = css`
+  overflow-x: auto;
+  flex: 1;
+  padding: 0 16px 16px;
+  margin: 0;
+`
+
+const pre = ({ style: _, ...props }: ComponentProps<'pre'>) =>
+  <pre {...props} className={mergeStyle(preStyle, props.className)} />
+
 export default async function Features() {
-  const extractInput = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-extract-input.js', 'utf-8')
-  const extractOutput = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-extract-output.js', 'utf-8')
-  const extractOutputCss = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-extract-output.css', 'utf-8')
-
-  const supportVanilla = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-support-vanilla.js', 'utf-8')
-  const supportReact = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-support-react.jsx', 'utf-8')
-
-  const ssrInput = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-ssr-input.jsx', 'utf-8')
-  const ssrOutput = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-ssr-output.html', 'utf-8')
-  const ssrOutputCss = await readFile(process.cwd() + '/src/features/TopPageTemplate/assets/sample-code-ssr-output.css', 'utf-8')
-
   return (
     <div>
       <section>
         <h3>Extract Atomic CSS at build time.</h3>
         <div className={rootStyle}>
           <div className={colStyle}>
-            <CodeArea title="input.js" code={extractInput} lang="molcss" />
+            <CodeArea title="input.js">
+              <ExtractInput components={{ pre }} />
+            </CodeArea>
           </div>
           <div className={colStyle}>
-            <CodeArea className={css`flex: 1;`} title="output.js" code={extractOutput} lang="js" />
-            <CodeArea title="output.css" code={extractOutputCss} lang="css" />
+            <CodeArea title="output.js" className={css`flex: 1;`}>
+              <ExtractOutputJs components={{ pre }} />
+            </CodeArea>
+            <CodeArea title="output.css">
+              <ExtractOutputCss components={{ pre }} />
+            </CodeArea>
           </div>
         </div>
       </section>
@@ -52,10 +65,14 @@ export default async function Features() {
         <h3>Vanilla JS and React support.</h3>
         <div className={rootStyle}>
           <div className={colStyle}>
-            <CodeArea title="use-in-vanilla.js" code={supportVanilla} lang="js" />
+            <CodeArea title="use-in-vanilla.js">
+              <SupportVanila components={{ pre }} />
+            </CodeArea>
           </div>
           <div className={colStyle}>
-            <CodeArea title="use-in-react.jsx" code={supportReact} lang="js" />
+            <CodeArea title="use-in-react.js">
+              <SupportReact components={{ pre }} />
+            </CodeArea>
           </div>
         </div>
       </section>
@@ -63,11 +80,17 @@ export default async function Features() {
         <h3>Runtime style and SSR / SSG support.</h3>
         <div className={rootStyle}>
           <div className={colStyle}>
-            <CodeArea title="input.jsx" code={ssrInput} lang="molcss" />
+            <CodeArea title="input.js">
+              <SsrInput components={{ pre }} />
+            </CodeArea>
           </div>
           <div className={colStyle}>
-            <CodeArea className={css`flex: 1;`} title="Result (formatted)" code={ssrOutput} lang="html" />
-            <CodeArea title="output.css" code={ssrOutputCss} lang="css" />
+            <CodeArea title="Result (formatted)" className={css`flex: 1;`}>
+              <SsrOutputHtml components={{ pre }} />
+            </CodeArea>
+            <CodeArea title="output.css">
+              <SsrOutputCss components={{ pre }} />
+            </CodeArea>
           </div>
         </div>
       </section>

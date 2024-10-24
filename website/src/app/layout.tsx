@@ -1,7 +1,6 @@
 import 'molcss/style.css'
 
 import { css } from 'molcss'
-import { MolcssProvider } from 'molcss/react'
 import { type Metadata } from 'next'
 import Footer from './Footer'
 import Header from './Header'
@@ -26,11 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={bodyStyle}>
-        <MolcssProvider>
-          <Header />
-          {children}
-          <Footer />
-        </MolcssProvider>
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   )

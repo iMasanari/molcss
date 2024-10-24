@@ -5,11 +5,12 @@ import { StyleContext } from '../compiler/context'
 
 interface Options {
   context: StyleContext
+  dir: string
 }
 
 export default async function molcssScriptLoader(this: LoaderContext<Options>, input: string) {
   const callback = this.async()
-  const { context } = this.getOptions()
+  const { context, dir } = this.getOptions()
 
   try {
     const result = await transformAsync(input, {
@@ -23,6 +24,8 @@ export default async function molcssScriptLoader(this: LoaderContext<Options>, i
     if (!result || !result.code) {
       return input
     }
+
+    this.addContextDependency(dir)
 
     return callback(null, result.code, result.map || undefined)
   } catch (e) {
