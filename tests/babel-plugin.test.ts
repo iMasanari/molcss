@@ -98,11 +98,11 @@ describe('css tag', () => {
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
       "--- js ---
-      "g0 g1a";
+      "g0 bL0";
 
       --- css ---
       .g0{height:100vh} .g0{height:100dvh} .g0:hover{height:1px} .g0[data-hover]{height:2px}
-      .g1a span{height:1%}
+      .bL0 span{height:1%}
       "
     `)
   })
@@ -202,15 +202,15 @@ describe('css tag', () => {
 
     expect(formatActual(actual)).toMatchInlineSnapshot(`
       "--- js ---
-      "bL0a bL1b c0a c1b c2c c3d";
+      "bL0 bM0 bN0 bO0 bP0 bQ0";
 
       --- css ---
-      .c1b::before:hover{color:red}
-      .c3d::before:active{color:red}
-      .c0a::after:hover{color:red}
-      .c2c::after:active{color:red}
-      .bL1b::before{contnet:''}
-      .bL0a::after{contnet:''}
+      .bO0::before:hover{color:red}
+      .bQ0::before:active{color:red}
+      .bN0::after:hover{color:red}
+      .bP0::after:active{color:red}
+      .bM0::before{contnet:''}
+      .bL0::after{contnet:''}
       "
     `)
   })
@@ -480,16 +480,16 @@ it('css`...`', async () => {
     "--- js ---
     "c0";
     "c1";
-    "c2a";
-    "c3b";
-    "c4 c2a c3b";
+    "bL0";
+    "bM0";
+    "c2 bL0 bM0";
 
     --- css ---
     .c0{color:red}
     .c1:hover{color:red}
-    .c4{color:red} .c4:hover{color:red}
-    .c2a::after{color:red}
-    .c3b div{color:red}
+    .c2{color:red} .c2:hover{color:red}
+    .bL0::after{color:red}
+    .bM0 div{color:red}
     "
   `)
 })

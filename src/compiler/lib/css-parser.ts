@@ -74,7 +74,7 @@ const analyzeStylisElement = (element: Element, meta: string[], selector: string
       const value = element.children as string
       selector = selector || DUMMY_NESTING_SELECTOR_CLASS_NAME
 
-      const group = `${isSelfSelector(selector) ? '' : selector}{${prop}`
+      const group = isSelfSelector(selector) ? prop : `${selector}{${prop}`
 
       return [{ group, atRule: meta, selector, prop, value }]
     }
