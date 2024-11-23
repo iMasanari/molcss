@@ -2,7 +2,7 @@ import { transformAsync } from '@babel/core'
 import { FilterPattern, createFilter } from '@rollup/pluginutils'
 import postcss from 'postcss'
 import type { PluginOption, ResolvedConfig, ViteDevServer } from 'vite'
-import molcssBabelPlugin from '../compiler/babel-plugin'
+import molcssBabelPlugin, { MolcssBabelOptions } from '../compiler/babel-plugin'
 import { createContext } from '../compiler/context'
 import postcssPlugin from '../compiler/postcss-plugin'
 
@@ -10,9 +10,10 @@ interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   content: string | string[]
+  devLabel?: boolean
 }
 
-const molcss = ({ include, exclude, content }: Options): PluginOption => {
+const molcss = ({ include, exclude, content, devLabel }: Options): PluginOption => {
   const filter = createFilter(include ?? content, exclude)
   const styleFilter = createFilter('**/molcss/style.css')
 
@@ -39,7 +40,7 @@ const molcss = ({ include, exclude, content }: Options): PluginOption => {
       const result = await transformAsync(input, {
         filename: id,
         plugins: [
-          [molcssBabelPlugin, { context }],
+          [molcssBabelPlugin, { context, devLabel } satisfies MolcssBabelOptions],
         ],
         sourceMaps: true,
       })
