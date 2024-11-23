@@ -14,7 +14,7 @@ interface PluginOptions {
   types: BabelTypes
 }
 
-interface MolcssOptions {
+export interface MolcssBabelOptions {
   context: StyleContext
   devLabel?: boolean
 }
@@ -82,7 +82,7 @@ const getLocalName = (path: NodePath): string | null => {
   return null
 }
 
-const molcssBabelPlugin = ({ types: t }: PluginOptions, options: MolcssOptions): PluginObj => {
+const molcssBabelPlugin = ({ types: t }: PluginOptions, options: MolcssBabelOptions): PluginObj => {
   const styleContext = options.context
   const devLabel = options.devLabel ?? process.env.NODE_ENV !== 'production'
 
