@@ -5,7 +5,7 @@ import { StyleContext } from '../compiler/context'
 
 export interface WebpackScriptOptions {
   context: StyleContext
-  devLabel: boolean
+  devLabel: boolean | undefined
   dir: string
 }
 
@@ -17,7 +17,7 @@ export default async function molcssScriptLoader(this: LoaderContext<WebpackScri
     const result = await transformAsync(input, {
       filename: this.resourcePath,
       plugins: [
-        [molcssBabelPlugin, { context, devLabel } satisfies Required<MolcssBabelOptions>],
+        [molcssBabelPlugin, { context, devLabel } satisfies MolcssBabelOptions],
       ],
       sourceMaps: true,
     })
