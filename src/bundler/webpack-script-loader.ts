@@ -1,22 +1,23 @@
 import { transformAsync } from '@babel/core'
 import type { LoaderContext } from 'webpack'
-import molcssBabelPlugin from '../compiler/babel-plugin'
+import molcssBabelPlugin, { MolcssBabelOptions } from '../compiler/babel-plugin'
 import { StyleContext } from '../compiler/context'
 
-interface Options {
+export interface WebpackScriptOptions {
   context: StyleContext
+  devLabel: boolean
   dir: string
 }
 
-export default async function molcssScriptLoader(this: LoaderContext<Options>, input: string) {
+export default async function molcssScriptLoader(this: LoaderContext<WebpackScriptOptions>, input: string) {
   const callback = this.async()
-  const { context, dir } = this.getOptions()
+  const { context, devLabel, dir } = this.getOptions()
 
   try {
     const result = await transformAsync(input, {
       filename: this.resourcePath,
       plugins: [
-        [molcssBabelPlugin, { context }],
+        [molcssBabelPlugin, { context, devLabel } satisfies Required<MolcssBabelOptions>],
       ],
       sourceMaps: true,
     })

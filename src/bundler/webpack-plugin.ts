@@ -1,6 +1,7 @@
 import { createFilter } from '@rollup/pluginutils'
 import type { Compiler } from 'webpack'
 import { createContext } from '../compiler/context'
+import { WebpackScriptOptions } from './webpack-script-loader'
 
 export interface MolcssWebpackOptions {
   content: string | string[]
@@ -28,8 +29,9 @@ export default class MolcssPlugin {
       loader: scriptLoader,
       options: {
         context: this.context,
+        devLabel: this.options.devLabel ?? false,
         dir: compiler.context,
-      },
+      } satisfies WebpackScriptOptions,
     })
 
     compiler.options.module.rules.push({
