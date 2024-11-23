@@ -29,7 +29,7 @@ export default class MolcssPlugin {
       loader: scriptLoader,
       options: {
         context: this.context,
-        devLabel: this.options.devLabel ?? false,
+        devLabel: this.options.devLabel,
         dir: compiler.context,
       } satisfies WebpackScriptOptions,
     })
